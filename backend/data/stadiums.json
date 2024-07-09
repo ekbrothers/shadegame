@@ -5,7 +5,8 @@
       "stadiumID": 1,
       "address": "401 East Jefferson Street, Phoenix, AZ 85004",
       "phone": "(602) 462-6500",
-      "website": "dbacks.com"
+      "website": "dbacks.com",
+      "orientation": 45
     },
     "ATL": {
       "team": "Atlanta Braves",
@@ -13,7 +14,8 @@
       "stadiumID": 2,
       "address": "755 Battery Avenue, Atlanta, GA 30339",
       "phone": "(404) 614-2300",
-      "website": "braves.com"
+      "website": "braves.com",
+      "orientation": 80
     },
     "BAL": {
       "team": "Baltimore Orioles",
@@ -21,7 +23,8 @@
       "stadiumID": 3,
       "address": "333 West Camden Street, Baltimore, MD 21201",
       "phone": "(410) 685-9800",
-      "website": "orioles.com"
+      "website": "orioles.com",
+      "orientation": 65
     },
     "BOS": {
       "team": "Boston Red Sox",
@@ -29,7 +32,8 @@
       "stadiumID": 4,
       "address": "4 Jersey Street, Boston, MA 02215",
       "phone": "(617) 267-9440",
-      "website": "redsox.com"
+      "website": "redsox.com",
+      "orientation": 20
     },
     "CHC": {
       "team": "Chicago Cubs",
@@ -37,7 +41,8 @@
       "stadiumID": 5,
       "address": "1060 West Addison, Chicago, IL 60613-4397",
       "phone": "(773) 404-2827",
-      "website": "cubs.com"
+      "website": "cubs.com",
+      "orientation": 105
     },
     "CHW": {
       "team": "Chicago White Sox",
@@ -45,7 +50,8 @@
       "stadiumID": 6,
       "address": "333 West 35th Street, Chicago, IL 60616",
       "phone": "(312) 674-1000",
-      "website": "whitesox.com"
+      "website": "whitesox.com",
+      "orientation": 145
     },
     "CIN": {
       "team": "Cincinnati Reds",
@@ -53,7 +59,8 @@
       "stadiumID": 7,
       "address": "100 Main Street, Cincinnati, OH 45202-4109",
       "phone": "(513) 765-7000",
-      "website": "reds.com"
+      "website": "reds.com",
+      "orientation": 75
     },
     "CLE": {
       "team": "Cleveland Guardians",
@@ -61,7 +68,8 @@
       "stadiumID": 8,
       "address": "2401 Ontario Street, Cleveland, OH 44115",
       "phone": "(216) 420-4200",
-      "website": "cleguardians.com"
+      "website": "cleguardians.com",
+      "orientation": 45
     },
     "COL": {
       "team": "Colorado Rockies",
@@ -69,7 +77,8 @@
       "stadiumID": 9,
       "address": "2001 Blake Street, Denver, CO 80205-2000",
       "phone": "(303) 292-0200",
-      "website": "rockies.com"
+      "website": "rockies.com",
+      "orientation": 90
     },
     "DET": {
       "team": "Detroit Tigers",
@@ -77,7 +86,8 @@
       "stadiumID": 10,
       "address": "2100 Woodward Avenue, Detroit, MI 48201",
       "phone": "(313) 471-2000",
-      "website": "tigers.com"
+      "website": "tigers.com",
+      "orientation": 110
     },
     "HOU": {
       "team": "Houston Astros",
@@ -85,7 +95,8 @@
       "stadiumID": 11,
       "address": "501 Crawford Street, Houston, TX 77002",
       "phone": "(713) 259-8000",
-      "website": "astros.com"
+      "website": "astros.com",
+      "orientation": 30
     },
     "KC": {
       "team": "Kansas City Royals",
@@ -93,7 +104,8 @@
       "stadiumID": 12,
       "address": "One Royal Way, Kansas City, MO 64129",
       "phone": "(816) 921-8000",
-      "website": "royals.com"
+      "website": "royals.com",
+      "orientation": 75
     },
     "LAA": {
       "team": "Los Angeles Angels",
@@ -101,7 +113,8 @@
       "stadiumID": 13,
       "address": "2000 Gene Autry Way, Anaheim, CA 92806",
       "phone": "(714) 940-2000",
-      "website": "angels.com"
+      "website": "angels.com",
+      "orientation": 70
     },
     "LAD": {
       "team": "Los Angeles Dodgers",
@@ -109,7 +122,8 @@
       "stadiumID": 14,
       "address": "1000 Vin Scully Avenue, Los Angeles, CA 90012",
       "phone": "866-DODGERS",
-      "website": "dodgers.com"
+      "website": "dodgers.com",
+      "orientation": 40
     },
     "MIA": {
       "team": "Miami Marlins",
@@ -117,7 +131,8 @@
       "stadiumID": 15,
       "address": "501 Marlins Way, Miami, FL 33125",
       "phone": "(305) 480-1300",
-      "website": "marlins.com"
+      "website": "marlins.com",
+      "orientation": 80
     },
     "MIL": {
       "team": "Milwaukee Brewers",
@@ -125,7 +140,8 @@
       "stadiumID": 16,
       "address": "One Brewers Way, Milwaukee, WI 53214",
       "phone": "(414) 902-4400",
-      "website": "brewers.com"
+      "website": "brewers.com",
+      "orientation": 90
     },
     "MIN": {
       "team": "Minnesota Twins",
@@ -133,7 +149,8 @@
       "stadiumID": 17,
       "address": "1 Twins Way, Minneapolis, MN 55403",
       "phone": "(612) 659-3400",
-      "website": "twins.com"
+      "website": "twins.com",
+      "orientation": 40
     },
     "NYM": {
       "team": "New York Mets",
@@ -141,7 +158,8 @@
       "stadiumID": 18,
       "address": "41 Seaver Way, Flushing, NY 11368",
       "phone": "(718) 507-6387",
-      "website": "mets.com"
+      "website": "mets.com",
+      "orientation": 80
     },
     "NYY": {
       "team": "New York Yankees",
@@ -149,7 +167,8 @@
       "stadiumID": 19,
       "address": "One East 161st Street, Bronx, NY 10451",
       "phone": "(718) 293-4300",
-      "website": "yankees.com"
+      "website": "yankees.com",
+      "orientation": 90
     },
     "OAK": {
       "team": "Oakland Athletics",
@@ -157,7 +176,8 @@
       "stadiumID": 20,
       "address": "7000 Coliseum Way, Oakland, CA 94621",
       "phone": "(510) 638-4900",
-      "website": "athletics.com"
+      "website": "athletics.com",
+      "orientation": 100
     },
     "PHI": {
       "team": "Philadelphia Phillies",
@@ -165,7 +185,8 @@
       "stadiumID": 21,
       "address": "One Citizens Bank Way, Philadelphia, PA 19148",
       "phone": "(215) 463-6000",
-      "website": "phillies.com"
+      "website": "phillies.com",
+      "orientation": 80
     },
     "PIT": {
       "team": "Pittsburgh Pirates",
@@ -173,7 +194,8 @@
       "stadiumID": 22,
       "address": "115 Federal Street, Pittsburgh, PA 15212",
       "phone": "(412) 323-5000",
-      "website": "pirates.com"
+      "website": "pirates.com",
+      "orientation": 90
     },
     "SD": {
       "team": "San Diego Padres",
@@ -181,7 +203,8 @@
       "stadiumID": 23,
       "address": "100 Park Boulevard, San Diego, CA 92101",
       "phone": "(619) 795-5000",
-      "website": "padres.com"
+      "website": "padres.com",
+      "orientation": 90
     },
     "SF": {
       "team": "San Francisco Giants",
@@ -189,7 +212,8 @@
       "stadiumID": 24,
       "address": "24 Willie Mays Plaza, San Francisco, CA 94107",
       "phone": "(415) 972-2000",
-      "website": "sfgiants.com"
+      "website": "sfgiants.com",
+      "orientation": 50
     },
     "SEA": {
       "team": "Seattle Mariners",
@@ -197,7 +221,8 @@
       "stadiumID": 25,
       "address": "P.O. Box 4100, Seattle, WA 98104",
       "phone": "(206) 346-4000",
-      "website": "mariners.com"
+      "website": "mariners.com",
+      "orientation": 75
     },
     "STL": {
       "team": "St. Louis Cardinals",
@@ -205,7 +230,8 @@
       "stadiumID": 26,
       "address": "700 Clark Street, St. Louis, MO 63102",
       "phone": "(314) 345-9600",
-      "website": "cardinals.com"
+      "website": "cardinals.com",
+      "orientation": 105
     },
     "TB": {
       "team": "Tampa Bay Rays",
@@ -213,7 +239,8 @@
       "stadiumID": 27,
       "address": "One Tropicana Drive, St. Petersburg, FL 33705",
       "phone": "(727) 825-3137",
-      "website": "raysbaseball.com"
+      "website": "raysbaseball.com",
+      "orientation": 45
     },
     "TEX": {
       "team": "Texas Rangers",
@@ -221,7 +248,8 @@
       "stadiumID": 28,
       "address": "734 Stadium Drive, Arlington, TX 76011",
       "phone": "(817) 533-1972",
-      "website": "texasrangers.com"
+      "website": "texasrangers.com",
+      "orientation": 40
     },
     "TOR": {
       "team": "Toronto Blue Jays",
@@ -229,7 +257,8 @@
       "stadiumID": 29,
       "address": "1 Blue Jays Way, Suite 3200, Toronto, Ontario, Canada M5V1J1",
       "phone": "(416) 341-1000",
-      "website": "bluejays.com"
+      "website": "bluejays.com",
+      "orientation": 60
     },
     "WAS": {
       "team": "Washington Nationals",
@@ -237,7 +266,8 @@
       "stadiumID": 30,
       "address": "1500 South Capitol Street, SE, Washington, DC 20003-1507",
       "phone": "(202) 675-6287",
-      "website": "nationals.com"
+      "website": "nationals.com",
+      "orientation": 80
     }
   }
   
