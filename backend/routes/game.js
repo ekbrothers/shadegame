@@ -1,14 +1,23 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const schedule = require('../data/schedule.json');
-const stadium = require('../data/stadium.json');
+const mockSchedule = require("../data/mockSchedule.json");
+const stadiums = require("../data/stadiums.json");
 
-router.get('/schedule', (req, res) => {
-  res.json(schedule);
-});
-
-router.get('/stadium', (req, res) => {
-  res.json(stadium);
+// Serve the mock schedule data with stadium info
+router.get("/games", (req, res) => {
+  try {
+    const enrichedSchedule = mockSchedule.map((game) => {
+      const homeTeamStadium = stadiums[game.HomeTeam];
+      return {
+        ...game,
+        stadiumInfo: homeTeamStadium,
+      };
+    });
+    res.json(enrichedSchedule);
+  } catch (error) {
+    console.error("Error fetching mock games:", error);
+    res.status(500).json({ error: "Failed to fetch mock games" });
+  }
 });
 
 module.exports = router;

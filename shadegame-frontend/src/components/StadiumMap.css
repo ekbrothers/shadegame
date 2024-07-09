@@ -1,0 +1,8 @@
+rect {
+    cursor: pointer;
+    transition: fill 0.3s ease;
+  }
+  
+  rect:hover {
+    fill: #FFD700;
+  }
