@@ -1,8 +1,11 @@
+// src/components/TeamSchedule.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import StadiumMap from "./StadiumMap";
 
-const TeamSchedule = ({ team, onSelectGame }) => {
+const TeamSchedule = ({ team }) => {
   const [schedule, setSchedule] = useState([]);
+  const [selectedGame, setSelectedGame] = useState(null);
 
   useEffect(() => {
     if (team) {
@@ -34,21 +37,25 @@ const TeamSchedule = ({ team, onSelectGame }) => {
                 {game.AwayTeam} @ {game.HomeTeam}
               </h5>
               <p>
-                <strong>Date:</strong> {new Date(game.Day).toLocaleString()}
-              </p>
-              <p>
-                <strong>Stadium:</strong> {game.stadiumInfo.stadium}
+                <strong>Date:</strong>{" "}
+                {new Date(game.DateTime).toLocaleString()}
               </p>
             </div>
             <button
               className="btn btn-primary"
-              onClick={() => onSelectGame(game)}
+              onClick={() => setSelectedGame(game)}
             >
               Select Game
             </button>
           </li>
         ))}
       </ul>
+      {selectedGame && (
+        <StadiumMap
+          stadiumName={selectedGame.stadiumInfo.stadium.replace(/\s+/g, "")}
+          dateTime={selectedGame.DateTime}
+        />
+      )}
     </div>
   );
 };

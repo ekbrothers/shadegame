@@ -2,7 +2,7 @@
     "ARI": {
       "team": "Arizona Diamondbacks",
       "stadium": "Chase Field",
-      "stadiumID": 1,
+      "stadiumID": 7,
       "address": "401 East Jefferson Street, Phoenix, AZ 85004",
       "phone": "(602) 462-6500",
       "website": "dbacks.com",
@@ -56,7 +56,7 @@
     "CIN": {
       "team": "Cincinnati Reds",
       "stadium": "Great American Ball Park",
-      "stadiumID": 7,
+      "stadiumID": 1,
       "address": "100 Main Street, Cincinnati, OH 45202-4109",
       "phone": "(513) 765-7000",
       "website": "reds.com",
