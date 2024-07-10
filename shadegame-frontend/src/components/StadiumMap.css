@@ -1,8 +1,43 @@
-rect {
-    cursor: pointer;
-    transition: fill 0.3s ease;
+.stadium-map-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.stadium-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.svg-container {
+  width: 100%;
+  overflow: auto;
+  border: 1px solid #ccc;
+  max-height: 80vh; /* Ensure the SVG container doesn't exceed viewport height */
+}
+
+.svg-container svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 768px) {
+  .stadium-map-container {
+    padding: 10px;
   }
-  
-  rect:hover {
-    fill: #FFD700;
+
+  .stadium-name {
+    font-size: 1.2rem;
+    padding: 8px;
   }
+}

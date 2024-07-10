@@ -1,0 +1,119 @@
+.team-schedule {
+    padding: 20px;
+  }
+  
+  .schedule-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .game-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease;
+  }
+  
+  .game-item:hover {
+    background-color: #e9ecef;
+  }
+  
+  .game-date {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-right: 10px;
+  }
+  
+  .team-abbreviations {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+  }
+  
+  .team-abbreviation {
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+  
+  .at-symbol {
+    margin: 0 10px;
+  }
+  
+  .select-btn {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 20px;
+  }
+  
+  .select-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  .calendar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 10px;
+  }
+  
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    width: 100%;
+  }
+  
+  .calendar-day-header,
+  .calendar-day {
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .calendar-day.has-game {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .calendar-day.selected {
+    background-color: #0056b3;
+    color: white;
+  }
+  
+  @media (max-width: 600px) {
+    .game-item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .team-abbreviations {
+      margin-bottom: 10px;
+    }
+  
+    .select-btn {
+      align-self: stretch;
+      text-align: center;
+      margin-left: 0;
+      margin-top: 10px;
+    }
+  }
+  
