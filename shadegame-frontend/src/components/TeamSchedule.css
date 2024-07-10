@@ -1,119 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
+
 .team-schedule {
-    padding: 20px;
-  }
-  
-  .schedule-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .game-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  font-family: 'Roboto', sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.schedule-title {
+  font-size: 24px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.calendar {
+  margin-bottom: 30px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.calendar-header h3 {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.month-nav {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #1976d2;
+  cursor: pointer;
+  padding: 5px 10px;
+  transition: background-color 0.3s;
+  border-radius: 50%;
+}
+
+.month-nav:hover {
+  background-color: rgba(25, 118, 210, 0.1);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.calendar-day-header {
+  text-align: center;
+  font-weight: 500;
+  color: #757575;
+  padding: 10px 0;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  position: relative;
+}
+
+.calendar-day:hover {
+  background-color: rgba(25, 118, 210, 0.1);
+}
+
+.calendar-day.empty {
+  cursor: default;
+}
+
+.calendar-day.has-game {
+  font-weight: 500;
+}
+
+.calendar-day.selected {
+  background-color: #1976d2;
+  color: white;
+}
+
+.calendar-day.other-month {
+  color: #bdbdbd;
+}
+
+.day-number {
+  font-size: 14px;
+}
+
+.game-indicator {
+  width: 4px;
+  height: 4px;
+  background-color: #1976d2;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 4px;
+}
+
+.game-details {
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.game-details-title {
+  font-size: 20px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.game-teams {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.game-date, .game-time {
+  font-size: 16px;
+  color: #757575;
+  margin-bottom: 5px;
+}
+
+@media (max-width: 600px) {
+  .team-schedule {
     padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    transition: background-color 0.3s ease;
   }
-  
-  .game-item:hover {
-    background-color: #e9ecef;
+
+  .calendar-day-header {
+    font-size: 12px;
   }
-  
-  .game-date {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-right: 10px;
+
+  .day-number {
+    font-size: 12px;
   }
-  
-  .team-abbreviations {
-    display: flex;
-    align-items: center;
-    flex-grow: 1;
-  }
-  
-  .team-abbreviation {
-    font-size: 1.2em;
-    font-weight: bold;
-  }
-  
-  .at-symbol {
-    margin: 0 10px;
-  }
-  
-  .select-btn {
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-left: 20px;
-  }
-  
-  .select-btn:hover {
-    background-color: #0056b3;
-  }
-  
-  .calendar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .calendar-header {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 400px;
-    margin-bottom: 10px;
-  }
-  
-  .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-    width: 100%;
-  }
-  
-  .calendar-day-header,
-  .calendar-day {
-    text-align: center;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
-  
-  .calendar-day.has-game {
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-  }
-  
-  .calendar-day.selected {
-    background-color: #0056b3;
-    color: white;
-  }
-  
-  @media (max-width: 600px) {
-    .game-item {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .team-abbreviations {
-      margin-bottom: 10px;
-    }
-  
-    .select-btn {
-      align-self: stretch;
-      text-align: center;
-      margin-left: 0;
-      margin-top: 10px;
-    }
-  }
-  
+}

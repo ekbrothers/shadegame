@@ -6,6 +6,9 @@ import {
   endOfMonth,
   eachDayOfInterval,
   isSameDay,
+  isSameMonth,
+  addMonths,
+  subMonths,
 } from "date-fns";
 import StadiumMap from "./StadiumMap";
 import "./TeamSchedule.css";
@@ -48,27 +51,24 @@ const TeamSchedule = ({ team }) => {
 
   const renderCalendar = () => {
     const days = getDaysInMonth(currentMonth);
+    const firstDayOfMonth = startOfMonth(currentMonth);
+    const prefixDays = Array(firstDayOfMonth.getDay()).fill(null);
+
     return (
       <div className="calendar">
         <div className="calendar-header">
           <button
-            onClick={() =>
-              setCurrentMonth(
-                (date) => new Date(date.getFullYear(), date.getMonth() - 1, 1)
-              )
-            }
+            className="month-nav"
+            onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
           >
-            Previous
+            &lt;
           </button>
           <h3>{format(currentMonth, "MMMM yyyy")}</h3>
           <button
-            onClick={() =>
-              setCurrentMonth(
-                (date) => new Date(date.getFullYear(), date.getMonth() + 1, 1)
-              )
-            }
+            className="month-nav"
+            onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
           >
-            Next
+            &gt;
           </button>
         </div>
         <div className="calendar-grid">
@@ -77,19 +77,31 @@ const TeamSchedule = ({ team }) => {
               {day}
             </div>
           ))}
-          {days.map((day) => {
+          {[...prefixDays, ...days].map((day, index) => {
+            if (!day)
+              return (
+                <div
+                  key={`empty-${index}`}
+                  className="calendar-day empty"
+                ></div>
+              );
+
             const hasGame = schedule.some((game) =>
               isSameDay(new Date(game.DateTime), day)
             );
+            const isSelected = isSameDay(day, selectedDate);
+            const isCurrentMonth = isSameMonth(day, currentMonth);
+
             return (
               <div
                 key={day.toString()}
-                className={`calendar-day ${hasGame ? "has-game" : ""} ${
-                  isSameDay(day, selectedDate) ? "selected" : ""
-                }`}
+                className={`calendar-day ${hasGame ? "has-game" : ""} 
+                            ${isSelected ? "selected" : ""}
+                            ${!isCurrentMonth ? "other-month" : ""}`}
                 onClick={() => handleDateClick(day)}
               >
-                {format(day, "d")}
+                <span className="day-number">{format(day, "d")}</span>
+                {hasGame && <span className="game-indicator"></span>}
               </div>
             );
           })}
@@ -100,15 +112,20 @@ const TeamSchedule = ({ team }) => {
 
   return (
     <div className="team-schedule">
-      <h3>Schedule for {team}</h3>
+      <h2 className="schedule-title">Schedule for {team}</h2>
       {renderCalendar()}
       {selectedGame && (
         <div className="game-details">
-          <h4>
+          <h3 className="game-details-title">Game Details</h3>
+          <p className="game-teams">
             {selectedGame.AwayTeam} @ {selectedGame.HomeTeam}
-          </h4>
-          <p>Date: {format(new Date(selectedGame.DateTime), "MMMM d, yyyy")}</p>
-          <p>Time: {format(new Date(selectedGame.DateTime), "h:mm a")}</p>
+          </p>
+          <p className="game-date">
+            Date: {format(new Date(selectedGame.DateTime), "MMMM d, yyyy")}
+          </p>
+          <p className="game-time">
+            Time: {format(new Date(selectedGame.DateTime), "h:mm a")}
+          </p>
           <StadiumMap
             stadiumName={selectedGame.stadiumInfo.stadium.replace(/\s+/g, "")}
             dateTime={selectedGame.DateTime}
