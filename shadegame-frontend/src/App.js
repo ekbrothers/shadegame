@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import TeamSelector from "./components/TeamSelector";
 import TeamSchedule from "./components/TeamSchedule";
 import GameDetails from "./components/GameDetails";
+import "./App.css";
 
 // Example SVG mappings for stadiums
 const svgMap = {
@@ -51,14 +52,26 @@ const App = () => {
   const [selectedGame, setSelectedGame] = useState(null);
 
   return (
-    <div className="container mt-5">
-      <h1 className="text-center">Welcome to ShadeGame!</h1>
-      <h2 className="text-center">MLB Schedule</h2>
-      <TeamSelector teams={teams} onSelectTeam={setSelectedTeam} />
-      {selectedTeam && (
-        <TeamSchedule team={selectedTeam} onSelectGame={setSelectedGame} />
-      )}
-      {selectedGame && <GameDetails game={selectedGame} svgMap={svgMap} />}
+    <div className="app">
+      <header className="app-header">
+        <h1>ShadeGame</h1>
+        <h2>MLB Schedule</h2>
+      </header>
+      <main className="app-main">
+        <section className="team-selector-section">
+          <TeamSelector teams={teams} onSelectTeam={setSelectedTeam} />
+        </section>
+        {selectedTeam && (
+          <section className="team-schedule-section">
+            <TeamSchedule team={selectedTeam} onSelectGame={setSelectedGame} />
+          </section>
+        )}
+        {selectedGame && (
+          <section className="game-details-section">
+            <GameDetails game={selectedGame} svgMap={svgMap} />
+          </section>
+        )}
+      </main>
     </div>
   );
 };

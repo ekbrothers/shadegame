@@ -116,15 +116,14 @@ const TeamSchedule = ({ team }) => {
       {renderCalendar()}
       {selectedGame && (
         <div className="game-details">
-          <h3 className="game-details-title">Game Details</h3>
           <p className="game-teams">
             {selectedGame.AwayTeam} @ {selectedGame.HomeTeam}
           </p>
           <p className="game-date">
-            Date: {format(new Date(selectedGame.DateTime), "MMMM d, yyyy")}
+            {format(new Date(selectedGame.DateTime), "MMMM d, yyyy")}
           </p>
           <p className="game-time">
-            Time: {format(new Date(selectedGame.DateTime), "h:mm a")}
+            {format(new Date(selectedGame.DateTime), "h:mm a")}
           </p>
           <StadiumMap
             stadiumName={selectedGame.stadiumInfo.stadium.replace(/\s+/g, "")}
