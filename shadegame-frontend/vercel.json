@@ -1,19 +1,19 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "src/**/*",
-        "use": "@vercel/static-build",
-        "config": {
-          "distDir": "build"
-        }
+  "version": 2,
+  "name": "shadegame",
+  "builds": [
+    {
+      "src": "shadegame-frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "shadegame-frontend/build"
       }
-    ],
-    "routes": [
-      {
-        "src": "/svg/(.*)",
-        "dest": "/public/svg/$1"
-      }
-    ]
-  }
-  
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "shadegame-frontend/$1"
+    }
+  ]
+}
