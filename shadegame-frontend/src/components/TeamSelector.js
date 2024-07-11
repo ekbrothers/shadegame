@@ -1,16 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Avatar from "@mui/material/Avatar";
 
-const TeamSelector = ({ teams, onSelectTeam }) => {
-  const [selectedTeam, setSelectedTeam] = useState(null);
+const TeamSelector = ({ teams, onSelectTeam, selectedTeam }) => {
+  const [selectedTeamObj, setSelectedTeamObj] = useState(null);
+
+  useEffect(() => {
+    // Update selectedTeamObj when selectedTeam (abbreviation) changes
+    if (selectedTeam) {
+      const team = teams.find((t) => t.abbreviation === selectedTeam);
+      setSelectedTeamObj(team);
+    } else {
+      setSelectedTeamObj(null);
+    }
+  }, [selectedTeam, teams]);
 
   const handleTeamSelect = (event, newValue) => {
-    setSelectedTeam(newValue);
+    setSelectedTeamObj(newValue);
     if (newValue) {
       onSelectTeam(newValue.abbreviation);
+    } else {
+      onSelectTeam("");
     }
   };
 
@@ -39,7 +51,7 @@ const TeamSelector = ({ teams, onSelectTeam }) => {
           {option.name}
         </Box>
       )}
-      value={selectedTeam}
+      value={selectedTeamObj}
       onChange={handleTeamSelect}
       isOptionEqualToValue={(option, value) =>
         option.abbreviation === value.abbreviation
