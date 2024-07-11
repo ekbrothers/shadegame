@@ -1,21 +1,16 @@
 import React from "react";
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 
-const TeamSelector = ({ teams, onSelectTeam, selectedTeam }) => {
-  const handleTeamSelect = (event) => {
-    const selectedAbbreviation = event.target.value;
-    onSelectTeam(selectedAbbreviation);
-  };
-
+const TeamSelector = ({ teams, selectedTeam, onSelectTeam }) => {
   return (
     <FormControl fullWidth>
-      <InputLabel id="team-select-label">Select a team</InputLabel>
+      <InputLabel id="team-select-label">Select a Team</InputLabel>
       <Select
         labelId="team-select-label"
         id="team-select"
         value={selectedTeam}
-        label="Select a team"
-        onChange={handleTeamSelect}
+        label="Select a Team"
+        onChange={(e) => onSelectTeam(e.target.value)}
         MenuProps={{
           PaperProps: {
             style: {

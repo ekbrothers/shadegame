@@ -30,9 +30,11 @@ const TeamSchedule = ({ team }) => {
 
   useEffect(() => {
     if (team) {
+      console.log(`Fetching schedule for team: ${team}`);
       axios
-        .get(`http://localhost:5000/api/games`)
+        .get(`http://localhost:5000/api/games`, { params: { team } })
         .then((response) => {
+          console.log("Response data:", response.data);
           const teamSchedule = response.data.filter(
             (game) => game.HomeTeam === team || game.AwayTeam === team
           );
