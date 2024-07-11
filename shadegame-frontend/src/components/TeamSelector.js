@@ -1,30 +1,17 @@
-import React, { useState, useRef, useEffect } from "react";
-import "./TeamSelector.css";
+import React, { useState } from "react";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+import Avatar from "@mui/material/Avatar";
 
 const TeamSelector = ({ teams, onSelectTeam }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
   const [selectedTeam, setSelectedTeam] = useState(null);
-  const dropdownRef = useRef(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const filteredTeams = teams.filter((team) =>
-    team.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const handleTeamSelect = (team) => {
-    setSelectedTeam(team);
-    onSelectTeam(team.abbreviation);
-    setIsOpen(false);
+  const handleTeamSelect = (event, newValue) => {
+    setSelectedTeam(newValue);
+    if (newValue) {
+      onSelectTeam(newValue.abbreviation);
+    }
   };
 
   const getInitials = (name) => {
@@ -36,53 +23,28 @@ const TeamSelector = ({ teams, onSelectTeam }) => {
   };
 
   return (
-    <div className="team-selector" ref={dropdownRef}>
-      <div className="selected-team" onClick={() => setIsOpen(!isOpen)}>
-        {selectedTeam ? (
-          <>
-            <div
-              className="team-circle"
-              style={{ backgroundColor: selectedTeam.primaryColor }}
-            >
-              {getInitials(selectedTeam.name)}
-            </div>
-            <span>{selectedTeam.name}</span>
-          </>
-        ) : (
-          <span>Select a team</span>
-        )}
-      </div>
-      {isOpen && (
-        <div className="team-dropdown">
-          <div className="search-bar">
-            <div className="search-icon"></div>
-            <input
-              type="text"
-              placeholder="Search teams..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <div className="team-list">
-            {filteredTeams.map((team) => (
-              <div
-                key={team.abbreviation}
-                className="team-item"
-                onClick={() => handleTeamSelect(team)}
-              >
-                <div
-                  className="team-circle"
-                  style={{ backgroundColor: team.primaryColor }}
-                >
-                  {getInitials(team.name)}
-                </div>
-                <span>{team.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+    <Autocomplete
+      options={teams}
+      getOptionLabel={(option) => option.name}
+      renderInput={(params) => <TextField {...params} label="Select a team" />}
+      renderOption={(props, option) => (
+        <Box
+          component="li"
+          sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
+          {...props}
+        >
+          <Avatar sx={{ bgcolor: option.primaryColor, mr: 2 }}>
+            {getInitials(option.name)}
+          </Avatar>
+          {option.name}
+        </Box>
       )}
-    </div>
+      value={selectedTeam}
+      onChange={handleTeamSelect}
+      isOptionEqualToValue={(option, value) =>
+        option.abbreviation === value.abbreviation
+      }
+    />
   );
 };
 

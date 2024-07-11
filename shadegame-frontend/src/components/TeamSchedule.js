@@ -10,14 +10,23 @@ import {
   addMonths,
   subMonths,
 } from "date-fns";
+import {
+  Box,
+  Typography,
+  Grid,
+  Paper,
+  IconButton,
+  useTheme,
+} from "@mui/material";
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import StadiumMap from "./StadiumMap";
-import "./TeamSchedule.css";
 
 const TeamSchedule = ({ team }) => {
   const [schedule, setSchedule] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedGame, setSelectedGame] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const theme = useTheme();
 
   useEffect(() => {
     if (team) {
@@ -55,36 +64,39 @@ const TeamSchedule = ({ team }) => {
     const prefixDays = Array(firstDayOfMonth.getDay()).fill(null);
 
     return (
-      <div className="calendar">
-        <div className="calendar-header">
-          <button
-            className="month-nav"
+      <Box sx={{ mb: 4 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <IconButton
             onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
           >
-            &lt;
-          </button>
-          <h3>{format(currentMonth, "MMMM yyyy")}</h3>
-          <button
-            className="month-nav"
+            <ChevronLeft />
+          </IconButton>
+          <Typography variant="h6">
+            {format(currentMonth, "MMMM yyyy")}
+          </Typography>
+          <IconButton
             onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
           >
-            &gt;
-          </button>
-        </div>
-        <div className="calendar-grid">
+            <ChevronRight />
+          </IconButton>
+        </Box>
+        <Grid container spacing={1}>
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-            <div key={day} className="calendar-day-header">
-              {day}
-            </div>
+            <Grid item xs={1.7} key={day}>
+              <Typography variant="subtitle2" align="center">
+                {day}
+              </Typography>
+            </Grid>
           ))}
           {[...prefixDays, ...days].map((day, index) => {
-            if (!day)
-              return (
-                <div
-                  key={`empty-${index}`}
-                  className="calendar-day empty"
-                ></div>
-              );
+            if (!day) return <Grid item xs={1.7} key={`empty-${index}`} />;
 
             const hasGame = schedule.some((game) =>
               isSameDay(new Date(game.DateTime), day)
@@ -93,45 +105,77 @@ const TeamSchedule = ({ team }) => {
             const isCurrentMonth = isSameMonth(day, currentMonth);
 
             return (
-              <div
-                key={day.toString()}
-                className={`calendar-day ${hasGame ? "has-game" : ""} 
-                            ${isSelected ? "selected" : ""}
-                            ${!isCurrentMonth ? "other-month" : ""}`}
-                onClick={() => handleDateClick(day)}
-              >
-                <span className="day-number">{format(day, "d")}</span>
-                {hasGame && <span className="game-indicator"></span>}
-              </div>
+              <Grid item xs={1.7} key={day.toString()}>
+                <Paper
+                  elevation={isSelected ? 8 : 1}
+                  sx={{
+                    p: 1,
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    bgcolor: isSelected
+                      ? theme.palette.primary.main
+                      : "background.paper",
+                    color: isSelected
+                      ? "common.white"
+                      : isCurrentMonth
+                      ? "text.primary"
+                      : "text.disabled",
+                    "&:hover": {
+                      bgcolor: theme.palette.action.hover,
+                    },
+                  }}
+                  onClick={() => handleDateClick(day)}
+                >
+                  <Typography variant="body2">{format(day, "d")}</Typography>
+                  {hasGame && (
+                    <Box
+                      sx={{
+                        width: 6,
+                        height: 6,
+                        borderRadius: "50%",
+                        bgcolor: isSelected
+                          ? "common.white"
+                          : theme.palette.secondary.main,
+                        mt: 0.5,
+                      }}
+                    />
+                  )}
+                </Paper>
+              </Grid>
             );
           })}
-        </div>
-      </div>
+        </Grid>
+      </Box>
     );
   };
 
   return (
-    <div className="team-schedule">
-      <h2 className="schedule-title">Schedule for {team}</h2>
+    <Box>
+      <Typography variant="h4" sx={{ mb: 3 }}>
+        Schedule for {team}
+      </Typography>
       {renderCalendar()}
       {selectedGame && (
-        <div className="game-details">
-          <p className="game-teams">
+        <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
+          <Typography variant="h6" sx={{ mb: 1 }}>
             {selectedGame.AwayTeam} @ {selectedGame.HomeTeam}
-          </p>
-          <p className="game-date">
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 1 }}>
             {format(new Date(selectedGame.DateTime), "MMMM d, yyyy")}
-          </p>
-          <p className="game-time">
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 2 }}>
             {format(new Date(selectedGame.DateTime), "h:mm a")}
-          </p>
+          </Typography>
           <StadiumMap
             stadiumName={selectedGame.stadiumInfo.stadium.replace(/\s+/g, "")}
             dateTime={selectedGame.DateTime}
           />
-        </div>
+        </Paper>
       )}
-    </div>
+    </Box>
   );
 };
 

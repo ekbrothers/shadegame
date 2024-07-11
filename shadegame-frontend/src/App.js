@@ -1,5 +1,15 @@
 import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
+
 import TeamSelector from "./components/TeamSelector";
 import TeamSchedule from "./components/TeamSchedule";
 import GameDetails from "./components/GameDetails";
@@ -50,29 +60,58 @@ const teams = [
 const App = () => {
   const [selectedTeam, setSelectedTeam] = useState("");
   const [selectedGame, setSelectedGame] = useState(null);
+  const [darkMode, setDarkMode] = useState(false);
+
+  const theme = createTheme({
+    palette: {
+      mode: darkMode ? "dark" : "light",
+      primary: {
+        main: "#1976d2",
+      },
+      secondary: {
+        main: "#dc004e",
+      },
+    },
+  });
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
 
   return (
-    <div className="app">
-      <header className="app-header">
-        <h1>ShadeGame</h1>
-        <h2>MLB Schedule</h2>
-      </header>
-      <main className="app-main">
-        <section className="team-selector-section">
-          <TeamSelector teams={teams} onSelectTeam={setSelectedTeam} />
-        </section>
-        {selectedTeam && (
-          <section className="team-schedule-section">
-            <TeamSchedule team={selectedTeam} onSelectGame={setSelectedGame} />
-          </section>
-        )}
-        {selectedGame && (
-          <section className="game-details-section">
-            <GameDetails game={selectedGame} svgMap={svgMap} />
-          </section>
-        )}
-      </main>
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              ShadeGame MLB Schedule
+            </Typography>
+            <IconButton sx={{ ml: 1 }} onClick={toggleDarkMode} color="inherit">
+              {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+        <Container maxWidth="lg" sx={{ mt: 4 }}>
+          <Box sx={{ mb: 4 }}>
+            <TeamSelector teams={teams} onSelectTeam={setSelectedTeam} />
+          </Box>
+          {selectedTeam && (
+            <Box sx={{ mb: 4 }}>
+              <TeamSchedule
+                team={selectedTeam}
+                onSelectGame={setSelectedGame}
+              />
+            </Box>
+          )}
+          {selectedGame && (
+            <Box sx={{ mb: 4 }}>
+              <GameDetails game={selectedGame} svgMap={svgMap} />
+            </Box>
+          )}
+        </Container>
+      </Box>
+    </ThemeProvider>
   );
 };
 

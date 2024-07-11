@@ -3,9 +3,9 @@ import { getStadiumShadingData } from "../data/stadiums";
 import "./StadiumMap.css";
 
 const StadiumMap = ({ stadiumName, dateTime }) => {
-  const [error, setError] = useState(null);
-  const [svgContent, setSvgContent] = useState(null);
-  const stadiumData = getStadiumShadingData(stadiumName);
+  const [svgContent, setSvgContent] = useState("");
+  const [viewBox, setViewBox] = useState("");
+  const [debugInfo, setDebugInfo] = useState("");
 
   const shadeColors = {
     fullySunny: "#FFD700",
@@ -14,83 +14,62 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
   };
 
   useEffect(() => {
-    if (stadiumName) {
-      console.log(`Fetching SVG for stadium: ${stadiumName}`);
-      fetch(`/svg/stadium_map_${stadiumName}.svg`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+    fetch(`/svg/stadium_map_${stadiumName}.svg`)
+      .then((response) => response.text())
+      .then((data) => {
+        const parser = new DOMParser();
+        const svgDoc = parser.parseFromString(data, "image/svg+xml");
+        const svgElement = svgDoc.documentElement;
+
+        // Extract and set viewBox
+        const originalViewBox = svgElement.getAttribute("viewBox");
+        setViewBox(originalViewBox || "0 0 1000 1000"); // Default if not present
+
+        // Apply shading
+        const stadiumData = getStadiumShadingData(stadiumName);
+        const shading = stadiumData.getShadingForTime(new Date(dateTime));
+        const sections = svgElement.querySelectorAll('[id^="spoly_"]');
+        sections.forEach((section) => {
+          const sectionId = section.getAttribute("data-sectionid");
+          let fill;
+          if (shading.fullySunny.includes(sectionId)) {
+            fill = shadeColors.fullySunny;
+          } else if (shading.partialShade.includes(sectionId)) {
+            fill = shadeColors.partialShade;
+          } else if (shading.fullyShaded.includes(sectionId)) {
+            fill = shadeColors.fullyShaded;
           }
-          return response.text();
-        })
-        .then((data) => {
-          console.log("SVG data received, length:", data.length);
-          if (data.includes("<svg")) {
-            const parser = new DOMParser();
-            const svgDoc = parser.parseFromString(data, "image/svg+xml");
-            const svgElement = svgDoc.documentElement;
-
-            console.log("SVG parsed successfully:", svgElement);
-
-            // Remove width and height attributes
-            svgElement.removeAttribute("width");
-            svgElement.removeAttribute("height");
-
-            // Ensure viewBox attribute
-            if (!svgElement.getAttribute("viewBox")) {
-              svgElement.setAttribute("viewBox", "0 0 100000 100000");
-            }
-
-            // Apply shading
-            const shading = stadiumData.getShadingForTime(new Date(dateTime));
-            const sections = svgElement.querySelectorAll('[id^="spoly_"]');
-            sections.forEach((section) => {
-              const sectionId = section.getAttribute("data-sectionid");
-              let fill;
-              if (shading.fullySunny.includes(sectionId)) {
-                fill = shadeColors.fullySunny;
-              } else if (shading.partialShade.includes(sectionId)) {
-                fill = shadeColors.partialShade;
-              } else if (shading.fullyShaded.includes(sectionId)) {
-                fill = shadeColors.fullyShaded;
-              }
-              if (fill) {
-                section.setAttribute("fill", fill);
-              }
-            });
-
-            setSvgContent(svgElement.outerHTML);
-            console.log("SVG content set");
-          } else {
-            throw new Error("Invalid SVG content");
+          if (fill) {
+            section.setAttribute("fill", fill);
           }
-        })
-        .catch((error) => {
-          console.error(`Error loading stadium SVG: ${error}`);
-          setError(`Failed to load stadium map: ${error.message}`);
         });
-    }
-  }, [stadiumName, dateTime, stadiumData]);
 
-  const formatStadiumName = (name) => {
-    return name.replace(/([A-Z])/g, " $1").trim();
-  };
+        // Remove the outer svg tag, we'll add it back in the render
+        svgElement.removeAttribute("width");
+        svgElement.removeAttribute("height");
+        setSvgContent(svgElement.innerHTML);
+        setDebugInfo(
+          `Shading applied for ${dateTime}. Sections shaded: ${sections.length}`
+        );
+      })
+      .catch((error) => {
+        console.error("Error loading SVG:", error);
+        setDebugInfo(`Error loading SVG: ${error.message}`);
+      });
+  }, [stadiumName, dateTime]);
 
   return (
     <div className="stadium-map-container">
-      <h2 className="stadium-name">
-        {formatStadiumName(stadiumName)} Seating Chart
-      </h2>
-      {error ? (
-        <p className="text-danger">{error}</p>
-      ) : svgContent ? (
-        <div
-          className="svg-container"
+      <h2>{stadiumName} Seating Chart</h2>
+      <div className="svg-container">
+        <svg
+          viewBox={viewBox}
           dangerouslySetInnerHTML={{ __html: svgContent }}
         />
-      ) : (
-        <p>Loading stadium map...</p>
-      )}
+      </div>
+      <div className="debug-info">
+        <p>{debugInfo}</p>
+      </div>
     </div>
   );
 };

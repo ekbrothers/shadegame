@@ -6,38 +6,36 @@
   box-sizing: border-box;
 }
 
-.stadium-name {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 20px;
+h2 {
   text-align: center;
-  padding: 10px;
-  background-color: #f0f0f0;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
 }
 
 .svg-container {
   width: 100%;
-  overflow: auto;
+  padding-bottom: 75%; /* Adjust this value to change the aspect ratio */
+  position: relative;
   border: 1px solid #ccc;
-  max-height: 80vh; /* Ensure the SVG container doesn't exceed viewport height */
+  overflow: hidden;
 }
 
 .svg-container svg {
-  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: auto;
+  height: 100%;
 }
 
-@media (max-width: 768px) {
-  .stadium-map-container {
-    padding: 10px;
-  }
+/* Force all child elements of the SVG to fit */
+.svg-container svg * {
+  vector-effect: non-scaling-stroke;
+}
 
-  .stadium-name {
-    font-size: 1.2rem;
-    padding: 8px;
-  }
+.debug-info {
+  margin-top: 20px;
+  font-size: 14px;
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 3px;
 }
