@@ -15,6 +15,7 @@ import LeagueSelector from "./components/LeagueSelector";
 import TeamSelector from "./components/TeamSelector";
 import TeamSchedule from "./components/TeamSchedule";
 import GameDetails from "./components/GameDetails";
+import { stadiums } from "./data";
 import "./App.css";
 
 const App = () => {
@@ -23,7 +24,6 @@ const App = () => {
   const [selectedLeague, setSelectedLeague] = useState("");
   const [selectedTeam, setSelectedTeam] = useState("");
   const [selectedGame, setSelectedGame] = useState(null);
-  const [scheduleData, setScheduleData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const [darkMode, setDarkMode] = useState(() => {
@@ -36,68 +36,34 @@ const App = () => {
   }, [darkMode]);
 
   useEffect(() => {
-    fetchLeagues();
+    const leaguesList = Object.keys(stadiums);
+    setLeagues(leaguesList);
+    setSelectedLeague(leaguesList[0]);
+    setLoading(false);
   }, []);
 
   useEffect(() => {
     if (selectedLeague) {
-      fetchTeams(selectedLeague);
-      fetchSchedule(selectedLeague);
+      const teamsList = Object.entries(stadiums[selectedLeague]).map(
+        ([abbr, data]) => ({
+          abbreviation: abbr,
+          name: data.team,
+        })
+      );
+      setTeams(teamsList);
+      setSelectedTeam("");
+      setSelectedGame(null);
     }
   }, [selectedLeague]);
 
-  useEffect(() => {
-    if (selectedTeam) {
-      fetchSchedule(selectedLeague, selectedTeam);
-    }
-  }, [selectedTeam]);
-
-  const fetchLeagues = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/api/leagues");
-      if (!response.ok) {
-        throw new Error("Failed to fetch leagues");
-      }
-      const data = await response.json();
-      setLeagues(data);
-      setSelectedLeague(data[0]); // Select the first league by default
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching leagues:", error);
-      setLoading(false);
-    }
+  const handleSelectGame = (game) => {
+    console.log("Selected game in App:", game);
+    setSelectedGame(game);
   };
 
-  const fetchTeams = async (league) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/teams?league=${league}`
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch teams");
-      }
-      const data = await response.json();
-      setTeams(data);
-      setSelectedTeam(""); // Reset selected team when league changes
-    } catch (error) {
-      console.error("Error fetching teams:", error);
-    }
-  };
-
-  const fetchSchedule = async (league, team = "") => {
-    try {
-      const url = `http://localhost:5000/api/games?league=${league}${
-        team ? `&team=${team}` : ""
-      }`;
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Failed to fetch schedule");
-      }
-      const data = await response.json();
-      setScheduleData(data);
-    } catch (error) {
-      console.error("Error fetching schedule:", error);
-    }
+  const handleSelectTeam = (team) => {
+    setSelectedTeam(team);
+    setSelectedGame(null);
   };
 
   const theme = createTheme({
@@ -157,20 +123,21 @@ const App = () => {
             <TeamSelector
               teams={teams}
               selectedTeam={selectedTeam}
-              onSelectTeam={setSelectedTeam}
+              onSelectTeam={handleSelectTeam}
             />
           </Box>
-          {selectedLeague && (
+          {selectedLeague && selectedTeam && (
             <Box sx={{ mb: 4 }}>
               <TeamSchedule
-                schedule={scheduleData}
-                onSelectGame={setSelectedGame}
+                team={selectedTeam}
+                league={selectedLeague}
+                onSelectGame={handleSelectGame}
               />
             </Box>
           )}
           {selectedGame && (
             <Box sx={{ mb: 4 }}>
-              <GameDetails game={selectedGame} />
+              <GameDetails game={selectedGame} league={selectedLeague} />
             </Box>
           )}
         </Container>

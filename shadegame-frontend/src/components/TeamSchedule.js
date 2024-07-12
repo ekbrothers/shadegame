@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {
   format,
   startOfMonth,
@@ -9,6 +8,7 @@ import {
   isSameMonth,
   addMonths,
   subMonths,
+  parseISO,
 } from "date-fns";
 import {
   Box,
@@ -19,32 +19,26 @@ import {
   useTheme,
 } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
-import StadiumMap from "./StadiumMap";
+import { stadiums, mockSchedule } from "../data";
 
-const TeamSchedule = ({ team }) => {
+const TeamSchedule = ({ team, league, onSelectGame }) => {
   const [schedule, setSchedule] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedGame, setSelectedGame] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const theme = useTheme();
 
   useEffect(() => {
-    if (team) {
-      console.log(`Fetching schedule for team: ${team}`);
-      axios
-        .get(`http://localhost:5000/api/games`, { params: { team } })
-        .then((response) => {
-          console.log("Response data:", response.data);
-          const teamSchedule = response.data.filter(
-            (game) => game.HomeTeam === team || game.AwayTeam === team
-          );
-          setSchedule(teamSchedule);
-        })
-        .catch((error) => {
-          console.error("Error fetching schedule:", error);
-        });
+    if (team && league) {
+      console.log(`Fetching schedule for team: ${team} in league: ${league}`);
+      const teamSchedule = mockSchedule.filter((game) => {
+        const isTeamPlaying = game.HomeTeam === team || game.AwayTeam === team;
+        const isCorrectLeague = game.League === league;
+        return isTeamPlaying && isCorrectLeague;
+      });
+      console.log("Filtered schedule:", teamSchedule);
+      setSchedule(teamSchedule);
     }
-  }, [team]);
+  }, [team, league]);
 
   const getDaysInMonth = (date) => {
     const start = startOfMonth(date);
@@ -54,10 +48,14 @@ const TeamSchedule = ({ team }) => {
 
   const handleDateClick = (date) => {
     setSelectedDate(date);
-    const game = schedule.find((game) =>
-      isSameDay(new Date(game.DateTime), date)
+    const gamesOnThisDay = schedule.filter((game) =>
+      isSameDay(parseISO(game.DateTime), date)
     );
-    setSelectedGame(game || null);
+    if (gamesOnThisDay.length > 0) {
+      onSelectGame(gamesOnThisDay[0]); // Select the first game if multiple games on the same day
+    } else {
+      onSelectGame(null);
+    }
   };
 
   const renderCalendar = () => {
@@ -100,9 +98,10 @@ const TeamSchedule = ({ team }) => {
           {[...prefixDays, ...days].map((day, index) => {
             if (!day) return <Grid item xs={1.7} key={`empty-${index}`} />;
 
-            const hasGame = schedule.some((game) =>
-              isSameDay(new Date(game.DateTime), day)
+            const gamesOnThisDay = schedule.filter((game) =>
+              isSameDay(parseISO(game.DateTime), day)
             );
+            const hasGame = gamesOnThisDay.length > 0;
             const isSelected = isSameDay(day, selectedDate);
             const isCurrentMonth = isSameMonth(day, currentMonth);
 
@@ -157,26 +156,9 @@ const TeamSchedule = ({ team }) => {
   return (
     <Box>
       <Typography variant="h4" sx={{ mb: 3 }}>
-        Schedule for {team}
+        Schedule for {stadiums[league][team].team}
       </Typography>
       {renderCalendar()}
-      {selectedGame && (
-        <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
-          <Typography variant="h6" sx={{ mb: 1 }}>
-            {selectedGame.AwayTeam} @ {selectedGame.HomeTeam}
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 1 }}>
-            {format(new Date(selectedGame.DateTime), "MMMM d, yyyy")}
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            {format(new Date(selectedGame.DateTime), "h:mm a")}
-          </Typography>
-          <StadiumMap
-            stadiumName={selectedGame.stadiumInfo.stadium.replace(/\s+/g, "")}
-            dateTime={selectedGame.DateTime}
-          />
-        </Paper>
-      )}
     </Box>
   );
 };

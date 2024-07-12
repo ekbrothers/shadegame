@@ -1,7 +1,10 @@
 import React from "react";
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { stadiums } from "../data"; // Adjust the import path as needed
 
-const LeagueSelector = ({ leagues, selectedLeague, onSelectLeague }) => {
+const LeagueSelector = ({ selectedLeague, onSelectLeague }) => {
+  const leagues = Object.keys(stadiums);
+
   return (
     <FormControl fullWidth>
       <InputLabel id="league-select-label">Select a League</InputLabel>

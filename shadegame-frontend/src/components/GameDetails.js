@@ -1,51 +1,52 @@
 import React from "react";
-import "./GameDetails.css";
+import { Typography, Paper, Box } from "@mui/material";
+import { format, parseISO } from "date-fns";
+import { stadiums } from "../data";
 
-const GameDetails = ({ game, svgMap }) => {
+const GameDetails = ({ game, league }) => {
   if (!game) return null;
 
-  const gameDate = new Date(game.Day);
-  const formattedDate = gameDate.toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const homeTeam = stadiums[league][game.HomeTeam];
+  const awayTeam = stadiums[league][game.AwayTeam];
 
   return (
-    <div className="game-details">
-      <div className="game-header">
-        <h2 className="game-title">
-          {game.AwayTeam} @ {game.HomeTeam}
-        </h2>
-        <div className="game-subtitle">{formattedDate}</div>
-      </div>
-      <div className="game-info">
-        <div className="info-item">
-          <span className="info-label">Stadium:</span>
-          <span className="info-value">{game.stadiumInfo.stadium}</span>
-        </div>
-        <div className="info-item">
-          <span className="info-label">Location:</span>
-          <span className="info-value">{game.stadiumInfo.location}</span>
-        </div>
-        <div className="info-item">
-          <span className="info-label">Capacity:</span>
-          <span className="info-value">
-            {game.stadiumInfo.capacity.toLocaleString()} seats
-          </span>
-        </div>
-      </div>
-      <div className="stadium-map">
-        <h3>Stadium Map</h3>
-        <div
-          className="svg-container"
-          dangerouslySetInnerHTML={{ __html: svgMap[game.stadiumInfo.stadium] }}
-        />
-      </div>
-    </div>
+    <Paper elevation={3} sx={{ p: 3 }}>
+      <Typography variant="h5" gutterBottom>
+        Game Details
+      </Typography>
+      <Box sx={{ mb: 2 }}>
+        <Typography variant="h6">
+          {awayTeam.team} @ {homeTeam.team}
+        </Typography>
+        <Typography>
+          {format(parseISO(game.DateTime), "MMMM d, yyyy 'at' h:mm a")}
+        </Typography>
+      </Box>
+      <Box sx={{ mb: 2 }}>
+        <Typography variant="subtitle1">Stadium Information</Typography>
+        <Typography>{homeTeam.stadium}</Typography>
+        <Typography>{homeTeam.address}</Typography>
+        <Typography>Phone: {homeTeam.phone}</Typography>
+        <Typography>
+          Website:{" "}
+          <a
+            href={`https://${homeTeam.website}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {homeTeam.website}
+          </a>
+        </Typography>
+      </Box>
+      <Box>
+        <Typography variant="subtitle1">Game Information</Typography>
+        <Typography>Season: {game.Season}</Typography>
+        <Typography>Status: {game.Status}</Typography>
+        {game.SeriesInfo && (
+          <Typography>Series Info: {game.SeriesInfo}</Typography>
+        )}
+      </Box>
+    </Paper>
   );
 };
 
