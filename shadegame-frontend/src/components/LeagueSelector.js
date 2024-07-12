@@ -1,9 +1,34 @@
-import React from "react";
-import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
-import { stadiums } from "../data"; // Adjust the import path as needed
+import React, { useState, useEffect } from "react";
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  CircularProgress,
+} from "@mui/material";
+import { dataService } from "../services/dataService";
 
 const LeagueSelector = ({ selectedLeague, onSelectLeague }) => {
-  const leagues = Object.keys(stadiums);
+  const [leagues, setLeagues] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchLeagues = async () => {
+      try {
+        const fetchedLeagues = await dataService.getLeagues();
+        setLeagues(fetchedLeagues);
+      } catch (error) {
+        console.error("Error fetching leagues:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchLeagues();
+  }, []);
+
+  if (loading) {
+    return <CircularProgress />;
+  }
 
   return (
     <FormControl fullWidth>

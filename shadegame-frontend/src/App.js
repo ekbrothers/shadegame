@@ -15,7 +15,7 @@ import LeagueSelector from "./components/LeagueSelector";
 import TeamSelector from "./components/TeamSelector";
 import TeamSchedule from "./components/TeamSchedule";
 import GameDetails from "./components/GameDetails";
-import { stadiums } from "./data";
+import { dataService } from "./services/dataService";
 import "./App.css";
 
 const App = () => {
@@ -36,24 +36,34 @@ const App = () => {
   }, [darkMode]);
 
   useEffect(() => {
-    const leaguesList = Object.keys(stadiums);
-    setLeagues(leaguesList);
-    setSelectedLeague(leaguesList[0]);
-    setLoading(false);
+    const fetchLeagues = async () => {
+      try {
+        const leaguesList = await dataService.getLeagues();
+        setLeagues(leaguesList);
+        setSelectedLeague(leaguesList[0]);
+      } catch (error) {
+        console.error("Error fetching leagues:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchLeagues();
   }, []);
 
   useEffect(() => {
-    if (selectedLeague) {
-      const teamsList = Object.entries(stadiums[selectedLeague]).map(
-        ([abbr, data]) => ({
-          abbreviation: abbr,
-          name: data.team,
-        })
-      );
-      setTeams(teamsList);
-      setSelectedTeam("");
-      setSelectedGame(null);
-    }
+    const fetchTeams = async () => {
+      if (selectedLeague) {
+        try {
+          const teamsList = await dataService.getTeams(selectedLeague);
+          setTeams(teamsList);
+          setSelectedTeam("");
+          setSelectedGame(null);
+        } catch (error) {
+          console.error("Error fetching teams:", error);
+        }
+      }
+    };
+    fetchTeams();
   }, [selectedLeague]);
 
   const handleSelectGame = (game) => {

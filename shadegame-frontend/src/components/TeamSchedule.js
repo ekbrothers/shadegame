@@ -19,7 +19,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
-import { stadiums, mockSchedule } from "../data";
+import { dataService } from "../services/dataService";
 
 const TeamSchedule = ({ team, league, onSelectGame }) => {
   const [schedule, setSchedule] = useState([]);
@@ -28,16 +28,19 @@ const TeamSchedule = ({ team, league, onSelectGame }) => {
   const theme = useTheme();
 
   useEffect(() => {
-    if (team && league) {
-      console.log(`Fetching schedule for team: ${team} in league: ${league}`);
-      const teamSchedule = mockSchedule.filter((game) => {
-        const isTeamPlaying = game.HomeTeam === team || game.AwayTeam === team;
-        const isCorrectLeague = game.League === league;
-        return isTeamPlaying && isCorrectLeague;
-      });
-      console.log("Filtered schedule:", teamSchedule);
-      setSchedule(teamSchedule);
-    }
+    const fetchSchedule = async () => {
+      if (team && league) {
+        console.log(`Fetching schedule for team: ${team} in league: ${league}`);
+        try {
+          const teamSchedule = await dataService.getSchedule(league, team);
+          console.log("Filtered schedule:", teamSchedule);
+          setSchedule(teamSchedule);
+        } catch (error) {
+          console.error("Error fetching schedule:", error);
+        }
+      }
+    };
+    fetchSchedule();
   }, [team, league]);
 
   const getDaysInMonth = (date) => {
@@ -156,7 +159,7 @@ const TeamSchedule = ({ team, league, onSelectGame }) => {
   return (
     <Box>
       <Typography variant="h4" sx={{ mb: 3 }}>
-        Schedule for {stadiums[league][team].team}
+        Schedule for {dataService.getStadiumInfo(league, team).team}
       </Typography>
       {renderCalendar()}
     </Box>

@@ -1,7 +1,17 @@
 import React from "react";
-import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  CircularProgress,
+} from "@mui/material";
 
-const TeamSelector = ({ teams, selectedTeam, onSelectTeam }) => {
+const TeamSelector = ({ teams, selectedTeam, onSelectTeam, loading }) => {
+  if (loading) {
+    return <CircularProgress />;
+  }
+
   return (
     <FormControl fullWidth>
       <InputLabel id="team-select-label">Select a Team</InputLabel>
@@ -19,11 +29,15 @@ const TeamSelector = ({ teams, selectedTeam, onSelectTeam }) => {
           },
         }}
       >
-        {teams.map((team) => (
-          <MenuItem key={team.abbreviation} value={team.abbreviation}>
-            {team.name}
-          </MenuItem>
-        ))}
+        {teams && teams.length > 0 ? (
+          teams.map((team) => (
+            <MenuItem key={team.abbreviation} value={team.abbreviation}>
+              {team.name}
+            </MenuItem>
+          ))
+        ) : (
+          <MenuItem disabled>No teams available</MenuItem>
+        )}
       </Select>
     </FormControl>
   );
