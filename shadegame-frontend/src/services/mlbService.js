@@ -20,6 +20,4 @@ export const mlbService = {
       throw error;
     }
   },
-
-  // You can add more MLB API related functions here in the future
 };

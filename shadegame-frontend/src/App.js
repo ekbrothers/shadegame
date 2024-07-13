@@ -163,7 +163,7 @@ const App = () => {
               <GameDetails game={selectedGame} league={selectedLeague} />
             </Box>
           )}
-          <Box sx={{ mt: 4, textAlign: "center" }}>
+          <Box sx={{ mt: 4, textAlign: "center", pb: 4 }}>
             <Typography variant="body2">
               Want to attend the game? Get your tickets on{" "}
               <Link
