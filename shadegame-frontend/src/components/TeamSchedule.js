@@ -9,6 +9,8 @@ import {
   addMonths,
   subMonths,
   parseISO,
+  startOfYear,
+  endOfYear,
 } from "date-fns";
 import {
   Box,
@@ -39,9 +41,31 @@ const TeamSchedule = ({ team, league, onSelectGame }) => {
           console.log(
             `Fetching schedule for team: ${team} in league: ${league}`
           );
-          const teamSchedule = await dataService.getSchedule(league, team);
-          console.log("Filtered schedule:", teamSchedule);
-          setSchedule(teamSchedule);
+          const startDate = format(startOfYear(new Date()), "yyyy-MM-dd");
+          const endDate = format(endOfYear(new Date()), "yyyy-MM-dd");
+          const scheduleData = await dataService.getSchedule(
+            league,
+            team,
+            startDate,
+            endDate
+          );
+
+          let formattedSchedule;
+          if (league === "MLB") {
+            formattedSchedule = scheduleData.dates.flatMap((date) =>
+              date.games.map((game) => ({
+                ...game,
+                DateTime: game.gameDate,
+                HomeTeam: game.teams.home.team.abbreviation,
+                AwayTeam: game.teams.away.team.abbreviation,
+              }))
+            );
+          } else {
+            formattedSchedule = scheduleData;
+          }
+
+          console.log("Formatted schedule:", formattedSchedule);
+          setSchedule(formattedSchedule);
         } catch (error) {
           console.error("Error fetching schedule:", error);
           setError("Failed to fetch schedule. Please try again later.");
@@ -188,8 +212,6 @@ const TeamSchedule = ({ team, league, onSelectGame }) => {
       </Box>
     );
   }
-
-  const teamInfo = dataService.getStadiumInfo(league, team);
 
   return <Box>{renderCalendar()}</Box>;
 };
