@@ -10,6 +10,7 @@ import IconButton from "@mui/material/IconButton";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import CircularProgress from "@mui/material/CircularProgress";
+import Link from "@mui/material/Link";
 
 import LeagueSelector from "./components/LeagueSelector";
 import TeamSelector from "./components/TeamSelector";
@@ -120,7 +121,7 @@ const App = () => {
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Multi-League Schedule
+              Pick Your Game
             </Typography>
             <IconButton sx={{ ml: 1 }} onClick={toggleDarkMode} color="inherit">
               {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
@@ -162,6 +163,19 @@ const App = () => {
               <GameDetails game={selectedGame} league={selectedLeague} />
             </Box>
           )}
+          <Box sx={{ mt: 4, textAlign: "center" }}>
+            <Typography variant="body2">
+              Want to attend the game? Get your tickets on{" "}
+              <Link
+                href="https://www.ticketmaster.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Ticketmaster
+              </Link>
+              .
+            </Typography>
+          </Box>
         </Container>
       </Box>
     </ThemeProvider>
