@@ -191,14 +191,7 @@ const TeamSchedule = ({ team, league, onSelectGame }) => {
 
   const teamInfo = dataService.getStadiumInfo(league, team);
 
-  return (
-    <Box>
-      <Typography variant="h4" sx={{ mb: 3 }}>
-        Schedule for {teamInfo ? teamInfo.team : team}
-      </Typography>
-      {renderCalendar()}
-    </Box>
-  );
+  return <Box>{renderCalendar()}</Box>;
 };
 
 export default TeamSchedule;
