@@ -14,11 +14,22 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
 
   useEffect(() => {
     const fetchAndProcessSVG = async () => {
+      if (!stadiumName) {
+        console.log("Stadium name not available yet");
+        return;
+      }
+
       try {
-        // const response = await fetch(`/svg/stadium_map_${stadiumName}.svg`);
-        const response = await fetch(
-          `/svg/stadium_map_GreatAmericanBallpark.svg`
-        );
+        console.log(`Fetching SVG for stadium: ${stadiumName}`);
+        const normalizedStadiumName = stadiumName
+          .toLowerCase()
+          .replace(/\s+/g, "-");
+        const svgUrl = `/svg/stadium_map_${encodeURIComponent(
+          normalizedStadiumName
+        )}.svg`;
+        console.log(`Attempting to fetch from: ${svgUrl}`);
+
+        const response = await fetch(svgUrl);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -131,11 +142,19 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
 
   return (
     <div className="stadium-map-container">
-      <div
-        className="svg-wrapper"
-        dangerouslySetInnerHTML={{ __html: svgContent }}
-      />
-      <Legend />
+      {error ? (
+        <div className="stadium-map-error">
+          <p>{error}</p>
+        </div>
+      ) : (
+        <>
+          <div
+            className="svg-wrapper"
+            dangerouslySetInnerHTML={{ __html: svgContent }}
+          />
+          <Legend />
+        </>
+      )}
     </div>
   );
 };
