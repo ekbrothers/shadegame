@@ -1,4 +1,5 @@
 import { stadiums, mockSchedule } from "../data";
+import { stadiumShadingData, getStadiumShadingData } from "./stadiumShading";
 
 const API_BASE_URL = "http://localhost:5000/api"; // Change this when you have a real backend
 
@@ -38,5 +39,9 @@ export const dataService = {
     // This might not need to change when moving to a backend,
     // unless you decide to store stadium info separately
     return stadiums[league][team];
+  },
+
+  getStadiumShadingData: (stadiumName) => {
+    return getStadiumShadingData(stadiumName);
   },
 };

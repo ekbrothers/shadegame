@@ -2,10 +2,11 @@ import React from "react";
 import { Typography, Paper, Box } from "@mui/material";
 import { format, parseISO } from "date-fns";
 import { dataService } from "../services/dataService";
+import StadiumMap from "./StadiumMap";
 
 const GameDetails = ({ game, league }) => {
   if (!game || !league) {
-    return null; // Don't render anything if game or league is not available
+    return null;
   }
 
   const homeTeam = dataService.getStadiumInfo(league, game.HomeTeam);
@@ -31,6 +32,12 @@ const GameDetails = ({ game, league }) => {
       </Box>
       <Box>
         <Typography variant="body1">{homeTeam.stadium}</Typography>
+      </Box>
+      <Box sx={{ mt: 3 }}>
+        <StadiumMap
+          stadiumName={homeTeam.stadium.replace(/\s+/g, "")}
+          dateTime={game.DateTime}
+        />
       </Box>
     </Paper>
   );

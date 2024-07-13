@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { getStadiumShadingData } from "../data/stadiums";
+import { dataService } from "../services/dataService";
 import "./StadiumMap.css";
 
 const StadiumMap = ({ stadiumName, dateTime }) => {
   const [svgContent, setSvgContent] = useState("");
   const [debugInfo, setDebugInfo] = useState("");
+  const [error, setError] = useState(null);
 
   const shadeColors = {
     fullySunny: "#FFD700",
@@ -13,17 +14,27 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
   };
 
   useEffect(() => {
-    fetch(`/svg/stadium_map_${stadiumName}.svg`)
-      .then((response) => response.text())
-      .then((data) => {
+    const fetchAndProcessSVG = async () => {
+      try {
+        const response = await fetch(`/svg/stadium_map_${stadiumName}.svg`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.text();
+
         const parser = new DOMParser();
         const svgDoc = parser.parseFromString(data, "image/svg+xml");
         const svgElement = svgDoc.documentElement;
 
         // Apply shading
-        const stadiumData = getStadiumShadingData(stadiumName);
+        const stadiumData = dataService.getStadiumShadingData(stadiumName);
+        if (!stadiumData) {
+          throw new Error(`No shading data found for stadium: ${stadiumName}`);
+        }
+
         const shading = stadiumData.getShadingForTime(new Date(dateTime));
         const sections = svgElement.querySelectorAll('[id^="spoly_"]');
+
         sections.forEach((section) => {
           const sectionId = section.getAttribute("data-sectionid");
           let fill;
@@ -48,27 +59,42 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
           const points = section.getAttribute("points").split(" ");
           points.forEach((point) => {
             const [x, y] = point.split(",").map(Number);
-            minX = Math.min(minX, x);
-            minY = Math.min(minY, y);
-            maxX = Math.max(maxX, x);
-            maxY = Math.max(maxY, y);
+            if (!isNaN(x) && !isNaN(y)) {
+              minX = Math.min(minX, x);
+              minY = Math.min(minY, y);
+              maxX = Math.max(maxX, x);
+              maxY = Math.max(maxY, y);
+            }
           });
         });
 
         // Add some padding
         const padding = 50;
-        minX -= padding;
-        minY -= padding;
-        maxX += padding;
-        maxY += padding;
+        minX = Math.floor(minX) - padding;
+        minY = Math.floor(minY) - padding;
+        maxX = Math.ceil(maxX) + padding;
+        maxY = Math.ceil(maxY) + padding;
 
         // Set the viewBox to focus on the content
         const width = maxX - minX;
         const height = maxY - minY;
-        svgElement.setAttribute(
-          "viewBox",
-          `${minX} ${minY} ${width} ${height}`
-        );
+
+        // Ensure all viewBox values are valid numbers
+        if (!isNaN(minX) && !isNaN(minY) && !isNaN(width) && !isNaN(height)) {
+          svgElement.setAttribute(
+            "viewBox",
+            `${minX} ${minY} ${width} ${height}`
+          );
+        } else {
+          console.error("Invalid viewBox values:", {
+            minX,
+            minY,
+            width,
+            height,
+          });
+          throw new Error("Invalid viewBox values calculated");
+        }
+
         svgElement.setAttribute("width", "100%");
         svgElement.setAttribute("height", "100%");
 
@@ -76,12 +102,51 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
         setDebugInfo(
           `Shading applied for ${dateTime}. Sections shaded: ${sections.length}`
         );
-      })
-      .catch((error) => {
-        console.error("Error loading SVG:", error);
-        setDebugInfo(`Error loading SVG: ${error.message}`);
-      });
+        setError(null);
+      } catch (error) {
+        console.error("Error processing SVG:", error);
+        setError(`Error processing SVG: ${error.message}`);
+        setDebugInfo("");
+        setSvgContent("");
+      }
+    };
+
+    fetchAndProcessSVG();
   }, [stadiumName, dateTime]);
+
+  const legendStyle = {
+    display: "flex",
+    justifyContent: "center",
+    marginTop: "20px",
+  };
+
+  const legendItemStyle = {
+    display: "flex",
+    alignItems: "center",
+    marginRight: "20px",
+  };
+
+  const colorBoxStyle = {
+    width: "20px",
+    height: "20px",
+    marginRight: "5px",
+    border: "1px solid #000",
+  };
+
+  console.log("Rendering StadiumMap", {
+    stadiumName,
+    dateTime,
+    error,
+    svgContent,
+  });
+
+  if (error) {
+    return (
+      <div className="stadium-map-error">
+        <p>{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="stadium-map-container">
@@ -91,6 +156,38 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
       </div>
       <div className="debug-info">
         <p>{debugInfo}</p>
+      </div>
+      <div className="legend" style={legendStyle}>
+        <div className="legend-item" style={legendItemStyle}>
+          <span
+            className="color-box"
+            style={{
+              ...colorBoxStyle,
+              backgroundColor: shadeColors.fullySunny,
+            }}
+          ></span>
+          <span>Fully Sunny</span>
+        </div>
+        <div className="legend-item" style={legendItemStyle}>
+          <span
+            className="color-box"
+            style={{
+              ...colorBoxStyle,
+              backgroundColor: shadeColors.partialShade,
+            }}
+          ></span>
+          <span>Partial Shade</span>
+        </div>
+        <div className="legend-item" style={legendItemStyle}>
+          <span
+            className="color-box"
+            style={{
+              ...colorBoxStyle,
+              backgroundColor: shadeColors.fullyShaded,
+            }}
+          ></span>
+          <span>Fully Shaded</span>
+        </div>
       </div>
     </div>
   );
