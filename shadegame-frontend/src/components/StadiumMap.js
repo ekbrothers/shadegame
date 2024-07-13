@@ -15,7 +15,10 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
   useEffect(() => {
     const fetchAndProcessSVG = async () => {
       try {
-        const response = await fetch(`/svg/stadium_map_${stadiumName}.svg`);
+        // const response = await fetch(`/svg/stadium_map_${stadiumName}.svg`);
+        const response = await fetch(
+          `/svg/stadium_map_GreatAmericanBallpark.svg`
+        );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
