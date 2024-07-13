@@ -130,9 +130,8 @@ const App = () => {
         <Container maxWidth="lg" sx={{ mt: 4 }}>
           <Box sx={{ mb: 4, textAlign: "left" }}>
             <Typography variant="body2">
-              Find your perfect seat with ShadeGame, giving you which sections
-              are full shade, partial shade, or full sun based on game date and
-              time.
+              ShadeGame finds your best seat for every stadium, every game -
+              based on time, date, and permanent shade structures.
             </Typography>
           </Box>
           <Box sx={{ mb: 4 }}>
