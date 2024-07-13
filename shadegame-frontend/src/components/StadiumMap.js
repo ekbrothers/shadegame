@@ -4,7 +4,6 @@ import "./StadiumMap.css";
 
 const StadiumMap = ({ stadiumName, dateTime }) => {
   const [svgContent, setSvgContent] = useState("");
-  const [debugInfo, setDebugInfo] = useState("");
   const [error, setError] = useState(null);
 
   const shadeColors = {
@@ -99,14 +98,10 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
         svgElement.setAttribute("height", "100%");
 
         setSvgContent(svgElement.outerHTML);
-        setDebugInfo(
-          `Shading applied for ${dateTime}. Sections shaded: ${sections.length}`
-        );
         setError(null);
       } catch (error) {
         console.error("Error processing SVG:", error);
         setError(`Error processing SVG: ${error.message}`);
-        setDebugInfo("");
         setSvgContent("");
       }
     };
@@ -133,13 +128,6 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
     border: "1px solid #000",
   };
 
-  console.log("Rendering StadiumMap", {
-    stadiumName,
-    dateTime,
-    error,
-    svgContent,
-  });
-
   if (error) {
     return (
       <div className="stadium-map-error">
@@ -150,12 +138,8 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
 
   return (
     <div className="stadium-map-container">
-      <h2>{stadiumName} Seating Chart</h2>
       <div className="svg-wrapper">
         <div dangerouslySetInnerHTML={{ __html: svgContent }} />
-      </div>
-      <div className="debug-info">
-        <p>{debugInfo}</p>
       </div>
       <div className="legend" style={legendStyle}>
         <div className="legend-item" style={legendItemStyle}>
