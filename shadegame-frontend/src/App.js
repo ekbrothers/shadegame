@@ -76,6 +76,12 @@ const App = () => {
     setSelectedGame(null);
   };
 
+  const handleLeagueChange = (newLeague) => {
+    setSelectedLeague(newLeague);
+    setSelectedTeam("");
+    setSelectedGame(null);
+  };
+
   const theme = createTheme({
     palette: {
       mode: darkMode ? "dark" : "light",
@@ -133,7 +139,7 @@ const App = () => {
             <LeagueSelector
               leagues={leagues}
               selectedLeague={selectedLeague}
-              onSelectLeague={setSelectedLeague}
+              onSelectLeague={handleLeagueChange}
             />
           </Box>
           <Box sx={{ mb: 4 }}>

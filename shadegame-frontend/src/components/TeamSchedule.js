@@ -17,6 +17,7 @@ import {
   Paper,
   IconButton,
   useTheme,
+  CircularProgress,
 } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { dataService } from "../services/dataService";
@@ -25,18 +26,27 @@ const TeamSchedule = ({ team, league, onSelectGame }) => {
   const [schedule, setSchedule] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const theme = useTheme();
 
   useEffect(() => {
     const fetchSchedule = async () => {
       if (team && league) {
-        console.log(`Fetching schedule for team: ${team} in league: ${league}`);
+        setLoading(true);
+        setError(null);
         try {
+          console.log(
+            `Fetching schedule for team: ${team} in league: ${league}`
+          );
           const teamSchedule = await dataService.getSchedule(league, team);
           console.log("Filtered schedule:", teamSchedule);
           setSchedule(teamSchedule);
         } catch (error) {
           console.error("Error fetching schedule:", error);
+          setError("Failed to fetch schedule. Please try again later.");
+        } finally {
+          setLoading(false);
         }
       }
     };
@@ -156,10 +166,35 @@ const TeamSchedule = ({ team, league, onSelectGame }) => {
     );
   };
 
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "200px",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ textAlign: "center", color: "error.main" }}>
+        <Typography>{error}</Typography>
+      </Box>
+    );
+  }
+
+  const teamInfo = dataService.getStadiumInfo(league, team);
+
   return (
     <Box>
       <Typography variant="h4" sx={{ mb: 3 }}>
-        Schedule for {dataService.getStadiumInfo(league, team).team}
+        Schedule for {teamInfo ? teamInfo.team : team}
       </Typography>
       {renderCalendar()}
     </Box>

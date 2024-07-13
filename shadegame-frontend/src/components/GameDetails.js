@@ -4,10 +4,20 @@ import { format, parseISO } from "date-fns";
 import { dataService } from "../services/dataService";
 
 const GameDetails = ({ game, league }) => {
-  if (!game) return null;
+  if (!game || !league) {
+    return null; // Don't render anything if game or league is not available
+  }
 
   const homeTeam = dataService.getStadiumInfo(league, game.HomeTeam);
   const awayTeam = dataService.getStadiumInfo(league, game.AwayTeam);
+
+  if (!homeTeam || !awayTeam) {
+    return (
+      <Paper elevation={3} sx={{ p: 3 }}>
+        <Typography>Game details are not available.</Typography>
+      </Paper>
+    );
+  }
 
   return (
     <Paper elevation={3} sx={{ p: 3 }}>
