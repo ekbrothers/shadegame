@@ -19,85 +19,11 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.text();
+        const svgText = await response.text();
 
-        const parser = new DOMParser();
-        const svgDoc = parser.parseFromString(data, "image/svg+xml");
-        const svgElement = svgDoc.documentElement;
-
-        // Apply shading
-        const stadiumData = dataService.getStadiumShadingData(stadiumName);
-        if (!stadiumData) {
-          throw new Error(`No shading data found for stadium: ${stadiumName}`);
-        }
-
-        const shading = stadiumData.getShadingForTime(new Date(dateTime));
-        const sections = svgElement.querySelectorAll('[id^="spoly_"]');
-
-        sections.forEach((section) => {
-          const sectionId = section.getAttribute("data-sectionid");
-          let fill;
-          if (shading.fullySunny.includes(sectionId)) {
-            fill = shadeColors.fullySunny;
-          } else if (shading.partialShade.includes(sectionId)) {
-            fill = shadeColors.partialShade;
-          } else if (shading.fullyShaded.includes(sectionId)) {
-            fill = shadeColors.fullyShaded;
-          }
-          if (fill) {
-            section.setAttribute("fill", fill);
-          }
-        });
-
-        // Find the bounding box of all the polygons
-        let minX = Infinity,
-          minY = Infinity,
-          maxX = -Infinity,
-          maxY = -Infinity;
-        sections.forEach((section) => {
-          const points = section.getAttribute("points").split(" ");
-          points.forEach((point) => {
-            const [x, y] = point.split(",").map(Number);
-            if (!isNaN(x) && !isNaN(y)) {
-              minX = Math.min(minX, x);
-              minY = Math.min(minY, y);
-              maxX = Math.max(maxX, x);
-              maxY = Math.max(maxY, y);
-            }
-          });
-        });
-
-        // Add some padding
-        const padding = 50;
-        minX = Math.floor(minX) - padding;
-        minY = Math.floor(minY) - padding;
-        maxX = Math.ceil(maxX) + padding;
-        maxY = Math.ceil(maxY) + padding;
-
-        // Set the viewBox to focus on the content
-        const width = maxX - minX;
-        const height = maxY - minY;
-
-        // Ensure all viewBox values are valid numbers
-        if (!isNaN(minX) && !isNaN(minY) && !isNaN(width) && !isNaN(height)) {
-          svgElement.setAttribute(
-            "viewBox",
-            `${minX} ${minY} ${width} ${height}`
-          );
-        } else {
-          console.error("Invalid viewBox values:", {
-            minX,
-            minY,
-            width,
-            height,
-          });
-          throw new Error("Invalid viewBox values calculated");
-        }
-
-        svgElement.setAttribute("width", "100%");
-        svgElement.setAttribute("height", "100%");
-
-        setSvgContent(svgElement.outerHTML);
+        // Process the SVG
+        const processedSvg = processSVG(svgText);
+        setSvgContent(processedSvg);
         setError(null);
       } catch (error) {
         console.error("Error processing SVG:", error);
@@ -109,24 +35,88 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
     fetchAndProcessSVG();
   }, [stadiumName, dateTime]);
 
-  const legendStyle = {
-    display: "flex",
-    justifyContent: "center",
-    marginTop: "20px",
+  const processSVG = (svgText) => {
+    const parser = new DOMParser();
+    const svgDoc = parser.parseFromString(svgText, "image/svg+xml");
+    const svgElement = svgDoc.documentElement;
+
+    // Apply shading
+    const stadiumData = dataService.getStadiumShadingData(stadiumName);
+    if (!stadiumData) {
+      throw new Error(`No shading data found for stadium: ${stadiumName}`);
+    }
+
+    const shading = stadiumData.getShadingForTime(new Date(dateTime));
+    const sections = svgElement.querySelectorAll('[id^="spoly_"]');
+
+    sections.forEach((section) => {
+      const sectionId = section.getAttribute("data-sectionid");
+      let fill;
+      if (shading.fullySunny.includes(sectionId)) {
+        fill = shadeColors.fullySunny;
+      } else if (shading.partialShade.includes(sectionId)) {
+        fill = shadeColors.partialShade;
+      } else if (shading.fullyShaded.includes(sectionId)) {
+        fill = shadeColors.fullyShaded;
+      }
+      if (fill) {
+        section.setAttribute("fill", fill);
+      }
+    });
+
+    // Calculate and set viewBox
+    const { minX, minY, maxX, maxY } = calculateBoundingBox(sections);
+    const padding = 50;
+    const width = maxX - minX + 2 * padding;
+    const height = maxY - minY + 2 * padding;
+
+    svgElement.setAttribute(
+      "viewBox",
+      `${minX - padding} ${minY - padding} ${width} ${height}`
+    );
+    svgElement.setAttribute("width", "100%");
+    svgElement.setAttribute("height", "100%");
+
+    return svgElement.outerHTML;
   };
 
-  const legendItemStyle = {
-    display: "flex",
-    alignItems: "center",
-    marginRight: "20px",
+  const calculateBoundingBox = (sections) => {
+    let minX = Infinity,
+      minY = Infinity,
+      maxX = -Infinity,
+      maxY = -Infinity;
+    sections.forEach((section) => {
+      const points = section.getAttribute("points").split(" ");
+      points.forEach((point) => {
+        const [x, y] = point.split(",").map(Number);
+        if (!isNaN(x) && !isNaN(y)) {
+          minX = Math.min(minX, x);
+          minY = Math.min(minY, y);
+          maxX = Math.max(maxX, x);
+          maxY = Math.max(maxY, y);
+        }
+      });
+    });
+    return { minX, minY, maxX, maxY };
   };
 
-  const colorBoxStyle = {
-    width: "20px",
-    height: "20px",
-    marginRight: "5px",
-    border: "1px solid #000",
-  };
+  const Legend = () => (
+    <div className="legend" style={legendStyle}>
+      {Object.entries(shadeColors).map(([key, color]) => (
+        <div key={key} className="legend-item" style={legendItemStyle}>
+          <span
+            className="color-box"
+            style={{ ...colorBoxStyle, backgroundColor: color }}
+          />
+          <span>
+            {key
+              .replace(/([A-Z])/g, " $1")
+              .replace(/^./, (str) => str.toUpperCase())}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
 
   if (error) {
     return (
@@ -138,43 +128,32 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
 
   return (
     <div className="stadium-map-container">
-      <div className="svg-wrapper">
-        <div dangerouslySetInnerHTML={{ __html: svgContent }} />
-      </div>
-      <div className="legend" style={legendStyle}>
-        <div className="legend-item" style={legendItemStyle}>
-          <span
-            className="color-box"
-            style={{
-              ...colorBoxStyle,
-              backgroundColor: shadeColors.fullySunny,
-            }}
-          ></span>
-          <span>Full Sun</span>
-        </div>
-        <div className="legend-item" style={legendItemStyle}>
-          <span
-            className="color-box"
-            style={{
-              ...colorBoxStyle,
-              backgroundColor: shadeColors.partialShade,
-            }}
-          ></span>
-          <span>Partial Shade</span>
-        </div>
-        <div className="legend-item" style={legendItemStyle}>
-          <span
-            className="color-box"
-            style={{
-              ...colorBoxStyle,
-              backgroundColor: shadeColors.fullyShaded,
-            }}
-          ></span>
-          <span>Full Shade</span>
-        </div>
-      </div>
+      <div
+        className="svg-wrapper"
+        dangerouslySetInnerHTML={{ __html: svgContent }}
+      />
+      <Legend />
     </div>
   );
+};
+
+const legendStyle = {
+  display: "flex",
+  justifyContent: "center",
+  marginTop: "20px",
+};
+
+const legendItemStyle = {
+  display: "flex",
+  alignItems: "center",
+  marginRight: "20px",
+};
+
+const colorBoxStyle = {
+  width: "20px",
+  height: "20px",
+  marginRight: "5px",
+  border: "1px solid #000",
 };
 
 export default StadiumMap;
