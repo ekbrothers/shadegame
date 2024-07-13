@@ -7,7 +7,7 @@
     <g id="viewport" transform="matrix(1,0,0,1,0,0)" style="transform: matrix(0.543502, 0, 0, 0.543502, 239.017, -85.5);">
       <g id="scaleSVG" data-scale="1" transform="matrix(1,0,0,1,0,4)" class="testrotate">
         <g id="svgelements">
-          <image id="svgOverlay" class="nopointereventsmap" xlink:href="/assets/images/venues/overlays/great-american-ball-park-mlb_3-2020.png" x="-372.3" y="-103.4" width="1912.1px" height="1358.1px"></image>
+          <!-- <image id="svgOverlay" class="nopointereventsmap" xlink:href="/assets/images/venues/overlays/great-american-ball-park-mlb_3-2020.png" x="-372.3" y="-103.4" width="1912.1px" height="1358.1px"></image> -->
           <g id="svgpolygroup">
             <polygon id="spoly_1" class="is-sec" data-sectionid="1" data-angle="0" points="540.44,694.53 525.89,715.8 545.48,725.03 554.71,700.97 540.44,694.53 540.44,694.53 "></polygon>
             <polygon id="spoly_2" class="is-sec" data-sectionid="2" data-angle="0" points="548.55,726.43 569.53,732.03 572.33,706 557.79,701.8 548.55,726.43 "></polygon>
