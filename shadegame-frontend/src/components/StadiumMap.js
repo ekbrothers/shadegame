@@ -150,7 +150,7 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
               backgroundColor: shadeColors.fullySunny,
             }}
           ></span>
-          <span>Fully Sunny</span>
+          <span>Full Sun</span>
         </div>
         <div className="legend-item" style={legendItemStyle}>
           <span
@@ -170,7 +170,7 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
               backgroundColor: shadeColors.fullyShaded,
             }}
           ></span>
-          <span>Fully Shaded</span>
+          <span>Full Shade</span>
         </div>
       </div>
     </div>
