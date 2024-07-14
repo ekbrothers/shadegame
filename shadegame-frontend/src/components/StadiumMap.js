@@ -18,10 +18,8 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
         console.log("Stadium name not available yet");
         return;
       }
-
       console.log(`Starting SVG fetch and process for stadium: ${stadiumName}`);
       console.log(`Current dateTime: ${dateTime}`);
-
       try {
         const normalizedStadiumName = stadiumName
           .toLowerCase()
@@ -30,21 +28,16 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
           normalizedStadiumName
         )}.svg`;
         console.log(`Attempting to fetch SVG from: ${svgUrl}`);
-
         const response = await fetch(svgUrl);
         console.log(`Fetch response status: ${response.status}`);
-
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-
         const svgText = await response.text();
         console.log(`SVG text fetched, length: ${svgText.length} characters`);
-
         console.log("Starting SVG processing");
         const processedSvg = processSVG(svgText);
         console.log("SVG processing completed");
-
         setSvgContent(processedSvg);
         setError(null);
       } catch (error) {
@@ -61,7 +54,14 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
     console.log("Entering processSVG function");
     const parser = new DOMParser();
     const svgDoc = parser.parseFromString(svgText, "image/svg+xml");
-    const svgElement = svgDoc.documentElement;
+    let processedSvgElement = svgDoc.documentElement;
+
+    if (processedSvgElement.tagName === "parsererror") {
+      console.error("SVG parsing error:", processedSvgElement.textContent);
+      throw new Error("SVG parsing error: " + processedSvgElement.textContent);
+    }
+
+    console.log("SVG parsed successfully");
 
     console.log("Applying shading to SVG");
     const stadiumData = dataService.getStadiumShadingData(stadiumName);
@@ -73,7 +73,9 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
     const shading = stadiumData.getShadingForTime(new Date(dateTime));
     console.log("Shading data:", shading);
 
-    const sections = svgElement.querySelectorAll('[id^="spoly_"]');
+    const sections = processedSvgElement.querySelectorAll(
+      '#stadium-sections [id^="spoly_"]'
+    );
     console.log(`Found ${sections.length} sections to shade`);
 
     sections.forEach((section) => {
@@ -94,42 +96,97 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
       }
     });
 
-    console.log("Calculating bounding box");
-    const { minX, minY, maxX, maxY } = calculateBoundingBox(sections);
-    const padding = 50;
-    const width = maxX - minX + 2 * padding;
-    const height = maxY - minY + 2 * padding;
+    console.log("Standardizing SVG");
+    try {
+      processedSvgElement = standardizeStadiumSVG(processedSvgElement);
+    } catch (error) {
+      console.error("Error during SVG standardization:", error);
+      // We'll continue with the original SVG if standardization fails
+    }
 
-    const viewBox = `${minX - padding} ${minY - padding} ${width} ${height}`;
-    console.log(`Setting viewBox to: ${viewBox}`);
-    svgElement.setAttribute("viewBox", viewBox);
-    svgElement.setAttribute("width", "100%");
-    svgElement.setAttribute("height", "100%");
+    processedSvgElement.classList.add("stadium-svg");
 
+    console.log("Final SVG:", processedSvgElement.outerHTML);
     console.log("Exiting processSVG function");
-    return svgElement.outerHTML;
+    return processedSvgElement.outerHTML;
   };
 
-  const calculateBoundingBox = (sections) => {
-    console.log("Calculating bounding box for sections");
+  const standardizeStadiumSVG = (svgElement) => {
+    console.log("Entering standardizeStadiumSVG function");
+
+    const mainGroup = svgElement.querySelector("#stadium-sections");
+    if (!mainGroup) {
+      console.error("Could not find main group with id 'stadium-sections'");
+      return svgElement;
+    }
+
+    let bbox = mainGroup.getBBox();
+    console.log("Original bounding box:", bbox);
+
+    if (
+      !isFinite(bbox.width) ||
+      !isFinite(bbox.height) ||
+      bbox.width === 0 ||
+      bbox.height === 0
+    ) {
+      console.error("Invalid bounding box dimensions, calculating manually");
+      bbox = calculateManualBoundingBox(mainGroup);
+      console.log("Manually calculated bounding box:", bbox);
+    }
+
+    const padding = Math.max(bbox.width, bbox.height) * 0.05;
+    const centerX = bbox.x + bbox.width / 2;
+    const centerY = bbox.y + bbox.height / 2;
+    const viewBoxWidth = bbox.width + 2 * padding;
+    const viewBoxHeight = bbox.height + 2 * padding;
+    const viewBoxX = centerX - viewBoxWidth / 2;
+    const viewBoxY = centerY - viewBoxHeight / 2;
+
+    const viewBox = `${viewBoxX} ${viewBoxY} ${viewBoxWidth} ${viewBoxHeight}`;
+
+    svgElement.setAttribute("viewBox", viewBox);
+    svgElement.setAttribute("preserveAspectRatio", "xMidYMid meet");
+    svgElement.removeAttribute("width");
+    svgElement.removeAttribute("height");
+
+    console.log(`Set viewBox to: ${viewBox}`);
+
+    const groups = svgElement.querySelectorAll("g");
+    groups.forEach((group) => {
+      if (group.getAttribute("transform")) {
+        console.log(`Removing transform from group:`, group.id);
+        group.removeAttribute("transform");
+      }
+    });
+
+    console.log("Exiting standardizeStadiumSVG function");
+    return svgElement;
+  };
+
+  const calculateManualBoundingBox = (element) => {
     let minX = Infinity,
       minY = Infinity,
       maxX = -Infinity,
       maxY = -Infinity;
-    sections.forEach((section) => {
-      const points = section.getAttribute("points").split(" ");
-      points.forEach((point) => {
-        const [x, y] = point.split(",").map(Number);
-        if (!isNaN(x) && !isNaN(y)) {
-          minX = Math.min(minX, x);
-          minY = Math.min(minY, y);
-          maxX = Math.max(maxX, x);
-          maxY = Math.max(maxY, y);
-        }
-      });
+    const polygons = element.querySelectorAll("polygon");
+
+    polygons.forEach((polygon) => {
+      const points = polygon.points;
+      for (let i = 0; i < points.numberOfItems; i++) {
+        const point = points.getItem(i);
+        minX = Math.min(minX, point.x);
+        minY = Math.min(minY, point.y);
+        maxX = Math.max(maxX, point.x);
+        maxY = Math.max(maxY, point.y);
+      }
     });
-    console.log(`Bounding box: (${minX}, ${minY}) to (${maxX}, ${maxY})`);
-    return { minX, minY, maxX, maxY };
+
+    return {
+      x: minX,
+      y: minY,
+      width: maxX - minX,
+      height: maxY - minY,
+    };
   };
 
   const Legend = () => (
