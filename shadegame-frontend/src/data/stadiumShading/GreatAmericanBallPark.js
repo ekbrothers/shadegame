@@ -5,7 +5,7 @@ export const GreatAmericanBallPark = {
   orientation: "southeast",
   shadeData: {
     morning: {
-      fullySunny: [
+      fullSun: [
         "101",
         "102",
         "103",
@@ -67,7 +67,7 @@ export const GreatAmericanBallPark = {
         "145",
         "146",
       ],
-      fullyShaded: [
+      fullShade: [
         "123",
         "124",
         "125",
@@ -151,7 +151,7 @@ export const GreatAmericanBallPark = {
       ],
     },
     earlyAfternoon: {
-      fullySunny: [
+      fullSun: [
         "101",
         "102",
         "103",
@@ -206,7 +206,7 @@ export const GreatAmericanBallPark = {
         "227",
         "228",
       ],
-      fullyShaded: [
+      fullShade: [
         "123",
         "124",
         "125",
@@ -297,7 +297,7 @@ export const GreatAmericanBallPark = {
       ],
     },
     lateAfternoon: {
-      fullySunny: [
+      fullSun: [
         "101",
         "102",
         "103",
@@ -343,7 +343,7 @@ export const GreatAmericanBallPark = {
         "518",
         "519",
       ],
-      fullyShaded: [
+      fullShade: [
         "123",
         "124",
         "125",
@@ -443,7 +443,7 @@ export const GreatAmericanBallPark = {
       ],
     },
     evening: {
-      fullySunny: [],
+      fullSun: [],
       partialShade: [
         "101",
         "102",
@@ -469,7 +469,7 @@ export const GreatAmericanBallPark = {
         "518",
         "519",
       ],
-      fullyShaded: [
+      fullShade: [
         "1",
         "2",
         "3",
