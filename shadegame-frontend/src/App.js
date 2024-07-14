@@ -131,8 +131,8 @@ const App = () => {
         <Container maxWidth="lg" sx={{ mt: 4 }}>
           <Box sx={{ mb: 4, textAlign: "left" }}>
             <Typography variant="body2">
-              ShadeGame finds your best seat for every stadium, every game -
-              based on time, date, and permanent shade structures.
+              ShadeGrade finds the best seat in every stadium - based on game
+              date, time & permanent shade structures.
             </Typography>
           </Box>
           <Box sx={{ mb: 4 }}>
