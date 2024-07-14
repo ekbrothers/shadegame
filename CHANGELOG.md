@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/ekbrothers/shadegame/compare/v1.1.0...v1.1.1) (2024-07-14)
+
+
+### Bug Fixes
+
+* **svg:** :bug: fix stadium rendering structure ([9e8fa53](https://github.com/ekbrothers/shadegame/commit/9e8fa533c27a8d3f7f79919889bc462a9d94a77f))
+
 ## [1.1.0](https://github.com/ekbrothers/shadegame/compare/v1.0.0...v1.1.0) (2024-07-14)
 
 
