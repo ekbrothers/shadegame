@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { dataService } from "../services/dataService";
 import "./StadiumMap.css";
 
 const StadiumMap = ({ stadiumName, dateTime }) => {
   const [svgContent, setSvgContent] = useState("");
   const [error, setError] = useState(null);
+  const containerRef = useRef(null);
 
   const shadeColors = {
     fullSun: "#FFD700",
@@ -49,6 +50,48 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
 
     fetchAndProcessSVG();
   }, [stadiumName, dateTime]);
+
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        if (entry.target === containerRef.current) {
+          adjustSvgSize();
+        }
+      }
+    });
+
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => {
+      if (containerRef.current) {
+        resizeObserver.unobserve(containerRef.current);
+      }
+    };
+  }, [svgContent]);
+
+  const adjustSvgSize = () => {
+    if (containerRef.current) {
+      const container = containerRef.current;
+      const svg = container.querySelector("svg");
+      if (svg) {
+        const aspectRatio =
+          svg.viewBox.baseVal.width / svg.viewBox.baseVal.height;
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
+        const containerAspectRatio = containerWidth / containerHeight;
+
+        if (containerAspectRatio > aspectRatio) {
+          svg.style.width = "auto";
+          svg.style.height = "100%";
+        } else {
+          svg.style.width = "100%";
+          svg.style.height = "auto";
+        }
+      }
+    }
+  };
 
   const processSVG = (svgText) => {
     console.log("Entering processSVG function");
@@ -216,7 +259,7 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
   }
 
   return (
-    <div className="stadium-map-container">
+    <div className="stadium-map-container" ref={containerRef}>
       {error ? (
         <div className="stadium-map-error">
           <p>{error}</p>

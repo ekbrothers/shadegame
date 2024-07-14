@@ -1,32 +1,17 @@
 .stadium-map-container {
   width: 100%;
-  max-width: 1000px;
+  max-width: 1200px; /* Adjust this value as needed */
   margin: 0 auto;
   padding: 20px;
   box-sizing: border-box;
 }
 
-h2 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
 .svg-wrapper {
   width: 100%;
-  padding-bottom: 75%; /* Adjust this value to match your SVG's aspect ratio */
+  padding-bottom: 85%; /* Increased from 75% to give more vertical space */
   position: relative;
   overflow: hidden;
-}
-
-.svg-wrapper > div {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  margin-bottom: 20px; /* Add some margin at the bottom */
 }
 
 .svg-wrapper svg {
@@ -35,7 +20,16 @@ h2 {
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .stadium-map-container {
+    padding: 10px;
+  }
+  
+  .svg-wrapper {
+    padding-bottom: 100%; /* Make it square on mobile for better visibility */
+  }
 }
 
 .legend {
@@ -56,60 +50,4 @@ h2 {
   height: 20px;
   margin-right: 5px;
   border: 1px solid #000;
-}
-
-.stadium-map-error {
-  color: #721c24;
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
-  border-radius: 4px;
-  padding: 10px;
-  margin-top: 20px;
-}
-
-.debug-info {
-  margin-top: 20px;
-  font-size: 14px;
-  background-color: #f0f0f0;
-  padding: 10px;
-  border-radius: 3px;
-}
-
-/* New styles for improved responsiveness */
-@media (max-width: 768px) {
-  .stadium-map-container {
-    padding: 10px;
-  }
-
-  .svg-wrapper {
-    padding-bottom: 100%; /* Make it square on mobile for better visibility */
-  }
-}
-
-.svg-wrapper {
-  width: 100%;
-  padding-bottom: 75%; /* Adjust this value to match your SVG's aspect ratio */
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.svg-wrapper > div {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.svg-wrapper svg.stadium-svg {
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
 }
