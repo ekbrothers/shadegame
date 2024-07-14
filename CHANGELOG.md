@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/ekbrothers/shadegame/compare/v1.1.1...v1.1.2) (2024-07-14)
+
+
+### Bug Fixes
+
+* **svg:** :sparkles: update stadium aspect ratio ([91c7b9e](https://github.com/ekbrothers/shadegame/commit/91c7b9eb4df6794fbf26d2040c3ebad7d17ed1de))
+
 ## [1.1.1](https://github.com/ekbrothers/shadegame/compare/v1.1.0...v1.1.1) (2024-07-14)
 
 
