@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/ekbrothers/shadegame/compare/v1.0.0...v1.1.0) (2024-07-14)
+
+
+### Features
+
+* **UI:** :lipstick: add home and away logic to calendar ui ([34d6ac7](https://github.com/ekbrothers/shadegame/commit/34d6ac7a02390aa6b462a89819e30aeb837971d9))
+
+
+### Bug Fixes
+
+* **svg:** :bug: fixed bug with not rendering svg in vercel ([85bc39d](https://github.com/ekbrothers/shadegame/commit/85bc39dfa8b4c21224c72aa7fcc47dc9356e1a33))
+
 ## 1.0.0 (2024-07-13)
 
 
