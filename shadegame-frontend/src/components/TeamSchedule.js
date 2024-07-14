@@ -32,6 +32,10 @@ const TeamSchedule = ({ team, league, onSelectGame }) => {
   const [error, setError] = useState(null);
   const theme = useTheme();
 
+  // Refined color definitions based on common practices
+  const homeGameColor = theme.palette.mode === "light" ? "#2E7D32" : "#4CAF50"; // Darker green for light mode, lighter green for dark mode
+  const awayGameColor = theme.palette.mode === "light" ? "#1565C0" : "#42A5F5"; // Darker blue for light mode, lighter blue for dark mode
+
   useEffect(() => {
     const fetchSchedule = async () => {
       if (team && league) {
@@ -95,6 +99,35 @@ const TeamSchedule = ({ team, league, onSelectGame }) => {
     }
   };
 
+  const renderLegend = () => (
+    <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+      <Box sx={{ display: "flex", alignItems: "center", mr: 2 }}>
+        <Box
+          sx={{
+            width: 8,
+            height: 8,
+            borderRadius: "50%",
+            bgcolor: homeGameColor,
+            mr: 1,
+          }}
+        />
+        <Typography variant="body2">Home Game</Typography>
+      </Box>
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Box
+          sx={{
+            width: 8,
+            height: 8,
+            borderRadius: "50%",
+            bgcolor: awayGameColor,
+            mr: 1,
+          }}
+        />
+        <Typography variant="body2">Away Game</Typography>
+      </Box>
+    </Box>
+  );
+
   const renderCalendar = () => {
     const days = getDaysInMonth(currentMonth);
     const firstDayOfMonth = startOfMonth(currentMonth);
@@ -124,6 +157,7 @@ const TeamSchedule = ({ team, league, onSelectGame }) => {
             <ChevronRight />
           </IconButton>
         </Box>
+        {renderLegend()}
         <Grid container spacing={1}>
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
             <Grid item xs={1.7} key={day}>
@@ -139,6 +173,7 @@ const TeamSchedule = ({ team, league, onSelectGame }) => {
               isSameDay(parseISO(game.DateTime), day)
             );
             const hasGame = gamesOnThisDay.length > 0;
+            const isHomeGame = hasGame && gamesOnThisDay[0].HomeTeam === team;
             const isSelected = isSameDay(day, selectedDate);
             const isCurrentMonth = isSameMonth(day, currentMonth);
 
@@ -171,12 +206,14 @@ const TeamSchedule = ({ team, league, onSelectGame }) => {
                   {hasGame && (
                     <Box
                       sx={{
-                        width: 6,
-                        height: 6,
+                        width: 8,
+                        height: 8,
                         borderRadius: "50%",
                         bgcolor: isSelected
                           ? "common.white"
-                          : theme.palette.secondary.main,
+                          : isHomeGame
+                          ? homeGameColor
+                          : awayGameColor,
                         mt: 0.5,
                       }}
                     />
