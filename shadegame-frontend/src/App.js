@@ -5,6 +5,7 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
@@ -117,7 +118,14 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ flexGrow: 1 }}>
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "100vh",
+        }}
+      >
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -128,7 +136,7 @@ const App = () => {
             </IconButton>
           </Toolbar>
         </AppBar>
-        <Container maxWidth="lg" sx={{ mt: 4 }}>
+        <Container maxWidth="lg" sx={{ mt: 4, flex: 1 }}>
           <Box sx={{ mb: 4, textAlign: "left" }}>
             <Typography variant="body2">
               ShadeGrade finds the best seat in every stadium - based on game
@@ -163,7 +171,7 @@ const App = () => {
               <GameDetails game={selectedGame} league={selectedLeague} />
             </Box>
           )}
-          <Box sx={{ mt: 4, textAlign: "center", pb: 4 }}>
+          <Box sx={{ mt: 4, textAlign: "center" }}>
             <Typography variant="body2">
               Want to attend the game? Get your tickets on{" "}
               <Link
@@ -177,6 +185,23 @@ const App = () => {
             </Typography>
           </Box>
         </Container>
+        <Box sx={{ py: 2, textAlign: "center" }}>
+          <Button
+            variant="outlined"
+            size="small"
+            href="https://buymeacoffee.com/ekbrothers"
+            target="_blank"
+            rel="noopener noreferrer"
+            startIcon={
+              <span role="img" aria-label="coffee">
+                ☕
+              </span>
+            }
+            sx={{ fontSize: "0.8rem", textTransform: "none" }}
+          >
+            Buy me a coffee
+          </Button>
+        </Box>
       </Box>
     </ThemeProvider>
   );

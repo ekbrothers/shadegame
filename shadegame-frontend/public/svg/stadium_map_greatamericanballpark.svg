@@ -155,7 +155,7 @@
     <polygon class="is-d epoly_party_decks" points="881.81,538.39 902.21,544.99 935.23,447.16 914.22,440.56 " style="fill:#F4F4F4; stroke:#BEBEBE; stroke-width:1; fill-opacity:1.0;"></polygon>
     <polygon class="is-d epoly_outdoor_suite" points="387.53,848.46 " style="fill:#; stroke:#; stroke-width:0; fill-opacity:0.0;"></polygon>
   </g>
-  <g id="svgsectionnames" style="opacity:1; font-size:8.753846153846155px;">
+  <g id="svgsectionnames" style="opacity:1; font-size:15px;">
     <text class="is-sec" data-sectionid="1" text-anchor="middle" x="540.3" y="711.8">1</text>
     <text class="is-sec" data-sectionid="2" text-anchor="middle" x="560.4" y="718.9">2</text>
     <text class="is-sec" data-sectionid="3" text-anchor="middle" x="585.6" y="721.4">3</text>
