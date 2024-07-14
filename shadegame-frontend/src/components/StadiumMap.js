@@ -7,9 +7,9 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
   const [error, setError] = useState(null);
 
   const shadeColors = {
-    fullySunny: "#FFD700",
+    fullSun: "#FFD700",
     partialShade: "#FFA500",
-    fullyShaded: "#4682B4",
+    fullShade: "#4682B4",
   };
 
   useEffect(() => {
@@ -19,28 +19,36 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
         return;
       }
 
+      console.log(`Starting SVG fetch and process for stadium: ${stadiumName}`);
+      console.log(`Current dateTime: ${dateTime}`);
+
       try {
-        console.log(`Fetching SVG for stadium: ${stadiumName}`);
         const normalizedStadiumName = stadiumName
           .toLowerCase()
           .replace(/\s+/g, "-");
         const svgUrl = `/svg/stadium_map_${encodeURIComponent(
           normalizedStadiumName
         )}.svg`;
-        console.log(`Attempting to fetch from: ${svgUrl}`);
+        console.log(`Attempting to fetch SVG from: ${svgUrl}`);
 
         const response = await fetch(svgUrl);
+        console.log(`Fetch response status: ${response.status}`);
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const svgText = await response.text();
 
-        // Process the SVG
+        const svgText = await response.text();
+        console.log(`SVG text fetched, length: ${svgText.length} characters`);
+
+        console.log("Starting SVG processing");
         const processedSvg = processSVG(svgText);
+        console.log("SVG processing completed");
+
         setSvgContent(processedSvg);
         setError(null);
       } catch (error) {
-        console.error("Error processing SVG:", error);
+        console.error("Error in fetchAndProcessSVG:", error);
         setError(`Error processing SVG: ${error.message}`);
         setSvgContent("");
       }
@@ -50,51 +58,60 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
   }, [stadiumName, dateTime]);
 
   const processSVG = (svgText) => {
+    console.log("Entering processSVG function");
     const parser = new DOMParser();
     const svgDoc = parser.parseFromString(svgText, "image/svg+xml");
     const svgElement = svgDoc.documentElement;
 
-    // Apply shading
+    console.log("Applying shading to SVG");
     const stadiumData = dataService.getStadiumShadingData(stadiumName);
     if (!stadiumData) {
+      console.error(`No shading data found for stadium: ${stadiumName}`);
       throw new Error(`No shading data found for stadium: ${stadiumName}`);
     }
 
     const shading = stadiumData.getShadingForTime(new Date(dateTime));
+    console.log("Shading data:", shading);
+
     const sections = svgElement.querySelectorAll('[id^="spoly_"]');
+    console.log(`Found ${sections.length} sections to shade`);
 
     sections.forEach((section) => {
       const sectionId = section.getAttribute("data-sectionid");
       let fill;
-      if (shading.fullySunny.includes(sectionId)) {
-        fill = shadeColors.fullySunny;
+      if (shading.fullSun.includes(sectionId)) {
+        fill = shadeColors.fullSun;
       } else if (shading.partialShade.includes(sectionId)) {
         fill = shadeColors.partialShade;
-      } else if (shading.fullyShaded.includes(sectionId)) {
-        fill = shadeColors.fullyShaded;
+      } else if (shading.fullShade.includes(sectionId)) {
+        fill = shadeColors.fullShade;
       }
       if (fill) {
         section.setAttribute("fill", fill);
+        console.log(`Applied ${fill} to section ${sectionId}`);
+      } else {
+        console.log(`No shading applied to section ${sectionId}`);
       }
     });
 
-    // Calculate and set viewBox
+    console.log("Calculating bounding box");
     const { minX, minY, maxX, maxY } = calculateBoundingBox(sections);
     const padding = 50;
     const width = maxX - minX + 2 * padding;
     const height = maxY - minY + 2 * padding;
 
-    svgElement.setAttribute(
-      "viewBox",
-      `${minX - padding} ${minY - padding} ${width} ${height}`
-    );
+    const viewBox = `${minX - padding} ${minY - padding} ${width} ${height}`;
+    console.log(`Setting viewBox to: ${viewBox}`);
+    svgElement.setAttribute("viewBox", viewBox);
     svgElement.setAttribute("width", "100%");
     svgElement.setAttribute("height", "100%");
 
+    console.log("Exiting processSVG function");
     return svgElement.outerHTML;
   };
 
   const calculateBoundingBox = (sections) => {
+    console.log("Calculating bounding box for sections");
     let minX = Infinity,
       minY = Infinity,
       maxX = -Infinity,
@@ -111,6 +128,7 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
         }
       });
     });
+    console.log(`Bounding box: (${minX}, ${minY}) to (${maxX}, ${maxY})`);
     return { minX, minY, maxX, maxY };
   };
 
