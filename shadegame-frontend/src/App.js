@@ -173,7 +173,7 @@ const App = () => {
           )}
           <Box sx={{ mt: 4, textAlign: "center" }}>
             <Typography variant="body2">
-              Want to attend the game? Get your tickets on{" "}
+              Want to attend this game? Get your tickets on{" "}
               <Link
                 href="https://www.ticketmaster.com"
                 target="_blank"
