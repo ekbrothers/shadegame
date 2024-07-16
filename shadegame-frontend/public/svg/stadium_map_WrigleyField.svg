@@ -1,6 +1,6 @@
-<svg data-component="svg" class="map__svg" viewBox="0 0 10240 7680" style="background-image: url(&quot;https://mapsapi.tmol.io/maps/geometry/image/25/82/258262?removeFilters=ISM_Shadow&amp;avertaFonts=true&amp;app=PRD2663_EDP_NA&quot;); transform: rotate(0deg);">
-  <g class="seats"/>
-  <g class="polygons">
+<!-- <svg data-component="svg" class="map__svg" viewBox="0 0 10240 7680" style="background-image: url(&quot;https://mapsapi.tmol.io/maps/geometry/image/25/82/258262?removeFilters=ISM_Shadow&amp;avertaFonts=true&amp;app=PRD2663_EDP_NA&quot;); transform: rotate(0deg);"> -->
+<svg id="svgmap" width="100000" height="100000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g id="stadium-sections">
     <path data-component="svg__section" data-section-id="s_130" data-section-name="214" class="block is-ga is-available is-filtered maximum" d="M2058.3,4619L2062.142677511978,5091.137620636227L2809.7268979954665,4989.55769575302L2795.620988837177,4619z"/>
     <path data-component="svg__section" data-section-id="s_251" data-section-name="AA14" class="block is-ga" d="M3757,4261.95L3760.42,4477.259999999999L4056.09,4477.259999999999L4053.36,4261.95z"/>
     <path data-component="svg__section" data-section-id="s_131" data-section-name="318R" class="block is-ga" d="M2996.7939442626953,6618.55L2824.25,6891.81457693845C2836.96559367657,6898.7371894411845 2849.652222447269,6905.495667477326 2862.300231343477,6912.090011046876C2887.1617755478555,6925.066288876267 2911.868840254264,6937.405338776537 2936.3634956509663,6949.18440049667C2994.553991542145,6977.125879691804 3051.556926292688,7001.775014586474 3107.381954871217,7023.826962921541C3190.3567552177897,7056.557306553713 3268.658550750801,7082.616066867351 3339.3811959147115,7103.287354689321L3428.6027609604043,6812.817623664578C3389.5291029428818,6799.928240552794 3352.454023430334,6786.372664606019 3326.337333304958,6776.485976736005C3311.092137849147,6770.7219604680395 3299.6123801563303,6766.242055026939 3288.9629497650963,6762.042143675909C3271.168842592797,6754.897466894845 3252.8630220834766,6747.270041682628 3233.195850998304,6738.744704388468C3169.502022991981,6711.102529220648 3100.5752019919605,6677.570823192763 3028.8194751853825,6637.000645038666C3018.2086646686403,6631.004909523746 3007.5302693715366,6624.864349479481 2996.7939442626953,6618.55z"/>
@@ -166,7 +166,7 @@
     <path data-component="svg__section" data-section-id="s_43" data-section-name="106" class="block is-ga is-available is-filtered maximum" d="M2963.6416942080227,1879.9L2929.55,2266.3883939810685L3509.9391288379697,2266.3883939810685L3539.908151443946,1879.9z"/>
     <path data-component="svg__section" data-section-id="s_42" data-section-name="107" class="block is-ga is-available is-filtered maximum" d="M2929.4821574380253,2267.35L2901,2590.212150755106L3484.855262573648,2590.212150755106L3509.890596213241,2267.35z"/>
   </g>
-  <g class="labels">
+  <g id="section-labels">
     <text data-component="svg__label" data-label-id="s_130" class="label" transform="" font-size="150"><tspan dy="1em" x="2416" y="4744">214</tspan></text>
     <text data-component="svg__label" data-label-id="s_251" class="label" transform="" font-size="90"><tspan dy="1em" x="3906" y="4317">AA14</tspan></text>
     <text data-component="svg__label" data-label-id="s_131" class="label" transform="" font-size="120"><tspan dy="1em" x="3139" y="6798">318R</tspan></text>

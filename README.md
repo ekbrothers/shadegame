@@ -2,7 +2,7 @@
 
 ## App Overview
 
-or ShadeGrade (shadegame.com is not available) is a web application initially designed for baseball fans to find the best seats in stadiums based on sun exposure. The app provides information about game schedules, stadium layouts, and shading patterns throughout the day. There are plans to expand to other sports once the user base grows.
+ShadeGrade (shadegame.com is not available) is a web application initially designed for baseball fans to find the best seats in stadiums based on sun exposure. The app provides information about game schedules, stadium layouts, and shading patterns throughout the day. There are plans to expand to other sports once the user base grows.
 
 ## Tech Stack
 

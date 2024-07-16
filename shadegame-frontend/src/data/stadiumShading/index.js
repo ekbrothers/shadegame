@@ -1,11 +1,11 @@
 import { GreatAmericanBallPark } from "./GreatAmericanBallPark";
 // Import other stadiums as you add them
-// import { WrigleyField } from './WrigleyField';
+import { WrigleyField } from "./WrigleyField";
 // import { FenwayPark } from './FenwayPark';
 
 export const stadiumShadingData = {
   GreatAmericanBallPark,
-  // WrigleyField,
+  WrigleyField,
   // FenwayPark,
   // Add other stadiums here as you create them
 };

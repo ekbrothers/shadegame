@@ -232,24 +232,6 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
     };
   };
 
-  const Legend = () => (
-    <div className="legend" style={legendStyle}>
-      {Object.entries(shadeColors).map(([key, color]) => (
-        <div key={key} className="legend-item" style={legendItemStyle}>
-          <span
-            className="color-box"
-            style={{ ...colorBoxStyle, backgroundColor: color }}
-          />
-          <span>
-            {key
-              .replace(/([A-Z])/g, " $1")
-              .replace(/^./, (str) => str.toUpperCase())}
-          </span>
-        </div>
-      ))}
-    </div>
-  );
-
   if (error) {
     return (
       <div className="stadium-map-error">
@@ -259,23 +241,42 @@ const StadiumMap = ({ stadiumName, dateTime }) => {
   }
 
   return (
-    <div className="stadium-map-container" ref={containerRef}>
+    <div className="stadium-map-container">
       {error ? (
         <div className="stadium-map-error">
           <p>{error}</p>
         </div>
       ) : (
         <>
+          <Legend shadeColors={shadeColors} />
           <div
             className="svg-wrapper"
+            ref={containerRef}
             dangerouslySetInnerHTML={{ __html: svgContent }}
           />
-          <Legend />
         </>
       )}
     </div>
   );
 };
+
+const Legend = ({ shadeColors }) => (
+  <div className="legend" style={legendStyle}>
+    {Object.entries(shadeColors).map(([key, color]) => (
+      <div key={key} className="legend-item" style={legendItemStyle}>
+        <span
+          className="color-box"
+          style={{ ...colorBoxStyle, backgroundColor: color }}
+        />
+        <span>
+          {key
+            .replace(/([A-Z])/g, " $1")
+            .replace(/^./, (str) => str.toUpperCase())}
+        </span>
+      </div>
+    ))}
+  </div>
+);
 
 const legendStyle = {
   display: "flex",
