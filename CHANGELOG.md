@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0](https://github.com/ekbrothers/shadegame/compare/v1.1.2...v1.2.0) (2024-07-16)
+
+
+### Features
+
+* **UI:** add buymeacoffee button and increase size of section labels ([41cb431](https://github.com/ekbrothers/shadegame/commit/41cb43174af9aecd9dc711259ca593d84b31674c))
+* **UI:** moved legend up above svg rendering ([a1261f7](https://github.com/ekbrothers/shadegame/commit/a1261f78c2ee232e5a87b2e1d06efee2f0a779b6))
+
 ## [1.1.2](https://github.com/ekbrothers/shadegame/compare/v1.1.1...v1.1.2) (2024-07-14)
 
 
