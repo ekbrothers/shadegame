@@ -12,6 +12,7 @@
   position: relative;
   overflow: hidden;
   margin-bottom: 20px; /* Add some margin at the bottom */
+  margin-top: 5px;
 }
 
 .svg-wrapper svg {
@@ -24,7 +25,7 @@
 
 @media (max-width: 768px) {
   .stadium-map-container {
-    padding: 10px;
+    padding: 0px;
   }
   
   .svg-wrapper {
@@ -36,13 +37,13 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  margin-top: 20px;
+  margin-top: 0px;
 }
 
 .legend-item {
   display: flex;
   align-items: center;
-  margin: 5px 10px;
+  margin: 5px 5px;
 }
 
 .color-box {

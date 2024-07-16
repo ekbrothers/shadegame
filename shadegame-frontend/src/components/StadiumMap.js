@@ -281,7 +281,7 @@ const Legend = ({ shadeColors }) => (
 const legendStyle = {
   display: "flex",
   justifyContent: "center",
-  marginTop: "20px",
+  marginTop: "0",
 };
 
 const legendItemStyle = {
